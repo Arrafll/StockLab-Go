@@ -1,9 +1,10 @@
-module github.com/Arrafll/setoko-go.git
+module github.com/Arrafll/StockLab-Go
 
 go 1.25.0
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
+	github.com/go-chi/chi/v5 v5.2.3 // indirect
 	github.com/go-openapi/jsonpointer v0.22.3 // indirect
 	github.com/go-openapi/jsonreference v0.21.3 // indirect
 	github.com/go-openapi/spec v0.22.1 // indirect

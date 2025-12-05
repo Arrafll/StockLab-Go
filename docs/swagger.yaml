@@ -1,0 +1,169 @@
+definitions:
+  services.LoginRequest:
+    properties:
+      email:
+        example: andrerafli83@gmail.com
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+  services.LoginResponse:
+    properties:
+      token:
+        example: eyJhbGciOiJI...
+        type: string
+    type: object
+  services.ProductResponse:
+    properties:
+      price:
+        example: 29.99
+        type: number
+      product_id:
+        example: 101
+        type: integer
+      product_name:
+        example: Sample Product
+        type: string
+    type: object
+  services.User:
+    properties:
+      id:
+        description: ID kapital
+        example: 1
+        type: integer
+      name:
+        example: Andre
+        type: string
+    type: object
+  services.UserCreate:
+    properties:
+      email:
+        type: string
+      name:
+        example: Andre
+        type: string
+      password:
+        example: password123
+        type: string
+    type: object
+info:
+  contact:
+    email: andrerafli83@gmail.com
+    name: Andre R
+  description: Dokumentasi API StockLab
+  license:
+    name: dreowsy
+  title: StockLab
+  version: "1.0"
+paths:
+  /api/v1/login/:
+    post:
+      consumes:
+      - application/json
+      description: Login to the system
+      parameters:
+      - description: User login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.LoginResponse'
+        "400":
+          description: Request invalid
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - auth
+  /api/v1/product/:
+    post:
+      consumes:
+      - application/json
+      description: Menampilkan list product
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.ProductResponse'
+      summary: Product list
+      tags:
+      - product
+  /api/v1/users/:
+    get:
+      consumes:
+      - application/json
+      description: Get all users in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/services.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get list of users
+      tags:
+      - users
+  /api/v1/users/create/:
+    post:
+      consumes:
+      - application/json
+      description: Get all users in the system
+      parameters:
+      - description: Data pengguna
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/services.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/services.User'
+            type: array
+      summary: Get detail of an user
+      tags:
+      - users
+  /api/v1/users/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get all users in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/services.User'
+            type: array
+      summary: Get detail of an user
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" JWT
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

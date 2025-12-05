@@ -1,19 +1,43 @@
 package routes
 
 import (
-	"encoding/json"
 	"net/http"
 
-	userService "github.com/Arrafll/setoko-go.git/internal/services/user"
+	_ "github.com/Arrafll/StockLab-Go/docs" // <-- wajib ada
+	authService "github.com/Arrafll/StockLab-Go/internal/services/auth"
+	productService "github.com/Arrafll/StockLab-Go/internal/services/product"
+	userService "github.com/Arrafll/StockLab-Go/internal/services/user"
+	"github.com/go-chi/chi/v5"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-func RegisterRoutes(mux *http.ServeMux) {
+func RegisterRoutes() http.Handler {
 
-	mux.HandleFunc("/user", userService.GetUserList)
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNotFound)
-		json.NewEncoder(w).Encode(map[string]string{
-			"error": "Endpoint not found",
+	r := chi.NewRouter()
+
+	// Swagger UI route
+	r.Get("/documentation/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8080/documentation/doc.json"), // URL ke swagger.json
+	))
+
+	// API Version 1
+	r.Route("/api/v1", func(r chi.Router) {
+
+		// Login Routes
+		r.Post("/login", authService.Login)
+		// User routes
+		r.Route("/users", func(r chi.Router) {
+			r.Get("/", userService.GetUserList)
+			r.Get("/detail/{id}", userService.GetUserDetail)
+			r.Post("/create", userService.CreateUser)
 		})
+
+		r.Route("/product", func(r chi.Router) {
+			r.Post("/", productService.GetProducts)
+		})
+
 	})
+
+	return r
+
 }
