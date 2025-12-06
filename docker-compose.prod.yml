@@ -12,6 +12,8 @@ services:
     depends_on:
       - db
       - migrate
+    volumes:
+    - ./logs:/app/logs 
 
   db:
     image: postgres:16
