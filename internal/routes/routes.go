@@ -18,7 +18,7 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 
 	// Swagger UI route
 	r.Get("/documentation*", httpSwagger.Handler(
-		httpSwagger.URL("http://localhost:8080/documentation/doc.json"), // URL ke swagger.json
+		httpSwagger.URL("/documentation/doc.json"), // URL ke swagger.json
 	))
 
 	// API Version 1
