@@ -16,13 +16,25 @@ type User struct {
 	Role  string `json:"role" example:"staff"`
 }
 
+type UserListSuccessResp struct {
+	Status  string `json:"status" example:"success"`
+	Message string `json:"message" example:"Login successful"`
+	Data    User   `json:"data"`
+}
+
+type UserListFailResp struct {
+	Status  string `json:"status" example:"error"`
+	Message string `json:"message" example:"Failed to fetch users"`
+}
+
 // GetUserList godoc
 // @Summary Get list of users
 // @Description Get all users in the system
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} Resp
+// @Success 200 {object} services.UserListSuccessResp
+// @Failure 500 {object} services.UserListFailResp
 // @Router /stocklab-api/v1/users/list [get]
 // @Security BearerAuth
 func GetUserList(w http.ResponseWriter, r *http.Request) {

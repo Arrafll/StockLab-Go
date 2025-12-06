@@ -13,64 +13,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/v1/users/": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all users in the system",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get list of users",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/services.User"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users/detail/{id}": {
-            "get": {
-                "description": "Get all users in the system",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get detail of an user",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/services.User"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/login": {
+        "/stocklab-api/v1/login": {
             "post": {
                 "description": "Login to the system",
                 "consumes": [
@@ -110,30 +53,7 @@
                 }
             }
         },
-        "/v1/product/": {
-            "post": {
-                "description": "Menampilkan list product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "product"
-                ],
-                "summary": "Product list",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/services.ProductResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/users/create": {
+        "/stocklab-api/v1/users/create": {
             "post": {
                 "description": "Get all users in the system",
                 "consumes": [
@@ -163,8 +83,71 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/services.User"
+                                "$ref": "#/definitions/services.UserCreateSuccessResp"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserCreateFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/users/list": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all users in the system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get list of users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserListSuccessResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserListFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/product/": {
+            "post": {
+                "description": "Menampilkan list product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "Product list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductResponse"
                         }
                     }
                 }
@@ -243,14 +226,25 @@
         "services.User": {
             "type": "object",
             "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "andrerafli83@gmail.com"
+                },
                 "id": {
-                    "description": "ID kapital",
                     "type": "integer",
                     "example": 1
                 },
                 "name": {
                     "type": "string",
                     "example": "Andre"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "081234567890"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "staff"
                 }
             }
         },
@@ -269,7 +263,91 @@
                     "example": "password123"
                 },
                 "phone": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "09999999999"
+                }
+            }
+        },
+        "services.UserCreateData": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "andrerafli83@gmail.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Andre"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "09999999999"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "staff"
+                }
+            }
+        },
+        "services.UserCreateFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Invalid credentials"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.UserCreateSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/services.UserCreateData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Login successful"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "services.UserListFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to fetch users"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.UserListSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/services.User"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Login successful"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
                 }
             }
         }

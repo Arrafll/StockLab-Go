@@ -48,12 +48,20 @@ definitions:
     type: object
   services.User:
     properties:
+      email:
+        example: andrerafli83@gmail.com
+        type: string
       id:
-        description: ID kapital
         example: 1
         type: integer
       name:
         example: Andre
+        type: string
+      phone:
+        example: "081234567890"
+        type: string
+      role:
+        example: staff
         type: string
     type: object
   services.UserCreate:
@@ -67,6 +75,65 @@ definitions:
         example: password123
         type: string
       phone:
+        example: "09999999999"
+        type: string
+    type: object
+  services.UserCreateData:
+    properties:
+      email:
+        example: andrerafli83@gmail.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Andre
+        type: string
+      phone:
+        example: "09999999999"
+        type: string
+      role:
+        example: staff
+        type: string
+    type: object
+  services.UserCreateFailResp:
+    properties:
+      message:
+        example: Invalid credentials
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.UserCreateSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.UserCreateData'
+      message:
+        example: Login successful
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.UserListFailResp:
+    properties:
+      message:
+        example: Failed to fetch users
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.UserListSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.User'
+      message:
+        example: Login successful
+        type: string
+      status:
+        example: success
         type: string
     type: object
 info:
@@ -79,43 +146,7 @@ info:
   title: StockLab
   version: "1.0"
 paths:
-  /api/v1/users/:
-    get:
-      consumes:
-      - application/json
-      description: Get all users in the system
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/services.User'
-            type: array
-      security:
-      - BearerAuth: []
-      summary: Get list of users
-      tags:
-      - users
-  /api/v1/users/detail/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get all users in the system
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/services.User'
-            type: array
-      summary: Get detail of an user
-      tags:
-      - users
-  /v1/login:
+  /stocklab-api/v1/login:
     post:
       consumes:
       - application/json
@@ -141,22 +172,7 @@ paths:
       summary: User login
       tags:
       - auth
-  /v1/product/:
-    post:
-      consumes:
-      - application/json
-      description: Menampilkan list product
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/services.ProductResponse'
-      summary: Product list
-      tags:
-      - product
-  /v1/users/create:
+  /stocklab-api/v1/users/create:
     post:
       consumes:
       - application/json
@@ -175,11 +191,51 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/services.User'
+              $ref: '#/definitions/services.UserCreateSuccessResp'
             type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.UserCreateFailResp'
       summary: Get detail of an user
       tags:
       - users
+  /stocklab-api/v1/users/list:
+    get:
+      consumes:
+      - application/json
+      description: Get all users in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.UserListSuccessResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.UserListFailResp'
+      security:
+      - BearerAuth: []
+      summary: Get list of users
+      tags:
+      - users
+  /v1/product/:
+    post:
+      consumes:
+      - application/json
+      description: Menampilkan list product
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.ProductResponse'
+      summary: Product list
+      tags:
+      - product
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" JWT

@@ -17,13 +17,33 @@ type UserCreate struct {
 	Phone    string `json:"phone" example:"09999999999"`
 }
 
+type UserCreateData struct {
+	ID    int64  `json:"id" example:"1"`
+	Email string `json:"email" example:"andrerafli83@gmail.com"`
+	Name  string `json:"name" example:"Andre"`
+	Phone string `json:"phone" example:"09999999999"`
+	Role  string `json:"role" example:"staff"`
+}
+
+type UserCreateSuccessResp struct {
+	Status  string         `json:"status" example:"success"`
+	Message string         `json:"message" example:"Login successful"`
+	Data    UserCreateData `json:"data"`
+}
+
+type UserCreateFailResp struct {
+	Status  string `json:"status" example:"error"`
+	Message string `json:"message" example:"Invalid credentials"`
+}
+
 // CreateUser godoc
 // @Summary Get detail of an user
 // @Description Get all users in the system
 // @Tags users
 // @Accept  json
 // @Produce  json
-// @Success 200 {array} services.User
+// @Success 200 {array} services.UserCreateSuccessResp
+// @Failure 400 {object} services.UserCreateFailResp
 // @Router /stocklab-api/v1/users/create [post]
 // @Param user body UserCreate true "Data pengguna"
 func CreateUser(w http.ResponseWriter, r *http.Request) {
