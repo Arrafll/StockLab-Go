@@ -15,7 +15,7 @@ type ProductResponse struct {
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} services.ProductResponse
-// @Router /api/v1/product/ [post]
+// @Router /v1/product/ [post]
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 
 }
