@@ -42,7 +42,7 @@ type AuthLoginFailResponse struct {
 // @Success 200 {object} services.AuthLoginSuccessResponse
 // @Failure 401 {object} services.AuthLoginFailResponse
 // @Param body body services.AuthLoginParamRequest true "User login credentials"
-// @Router /api/v1/login/ [post]
+// @Router /api/v1/login [post]
 func Login(w http.ResponseWriter, r *http.Request, cfg *config.Config) {
 	var req AuthLoginParamRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
