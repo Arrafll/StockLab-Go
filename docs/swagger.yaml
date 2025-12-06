@@ -172,6 +172,27 @@ paths:
       summary: User login
       tags:
       - auth
+  /stocklab-api/v1/users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.UserListSuccessResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.UserListFailResp'
+      security:
+      - BearerAuth: []
+      summary: Get list of users
+      tags:
+      - users
   /stocklab-api/v1/users/create:
     post:
       consumes:
@@ -198,27 +219,6 @@ paths:
           schema:
             $ref: '#/definitions/services.UserCreateFailResp'
       summary: Get detail of an user
-      tags:
-      - users
-  /stocklab-api/v1/users/list:
-    get:
-      consumes:
-      - application/json
-      description: Get all users in the system
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/services.UserListSuccessResp'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/services.UserListFailResp'
-      security:
-      - BearerAuth: []
-      summary: Get list of users
       tags:
       - users
   /v1/product/:

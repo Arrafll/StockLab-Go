@@ -35,7 +35,7 @@ type UserListFailResp struct {
 // @Produce  json
 // @Success 200 {object} services.UserListSuccessResp
 // @Failure 500 {object} services.UserListFailResp
-// @Router /stocklab-api/v1/users/list [get]
+// @Router /stocklab-api/v1/users [get]
 // @Security BearerAuth
 func GetUserList(w http.ResponseWriter, r *http.Request) {
 	// Query semua user
