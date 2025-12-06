@@ -77,7 +77,7 @@ info:
   title: StockLab
   version: "1.0"
 paths:
-  /api/v1/login/:
+  /api/v1/login:
     post:
       consumes:
       - application/json
