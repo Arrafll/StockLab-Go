@@ -14,7 +14,7 @@ type UserCreate struct {
 	Email    string `json:"email" example:andrerafli83@gmail.com"`
 	Password string `json:"password" example:"password123"`
 	Name     string `json:"name" example:"Andre"`
-	Phone    string `json:"phone" example:andrerafli83@gmail.com"`
+	Phone    string `json:"phone" example:"09999999999"`
 }
 
 // CreateUser godoc
@@ -24,7 +24,7 @@ type UserCreate struct {
 // @Accept  json
 // @Produce  json
 // @Success 200 {array} services.User
-// @Router /v1/users/create [post]
+// @Router /stocklab-api/v1/users/create [post]
 // @Param user body UserCreate true "Data pengguna"
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var newUser UserCreate
@@ -66,9 +66,9 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert user ke database
-	query := `INSERT INTO users (email, password, name, phone) VALUES ($1, $2, $3, $4) RETURNING id`
+	query := `INSERT INTO users (email, password, name, phone, role) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	var userID int64
-	err = db.DB.QueryRow(query, newUser.Email, string(hashedPassword), newUser.Name, newUser.Phone).Scan(&userID)
+	err = db.DB.QueryRow(query, newUser.Email, string(hashedPassword), newUser.Name, newUser.Phone, "staff").Scan(&userID)
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to create user: "+err.Error())
 		return
