@@ -21,7 +21,64 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/login": {
+        "/api/v1/users/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get all users in the system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get list of users",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/services.User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/detail/{id}": {
+            "get": {
+                "description": "Get all users in the system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get detail of an user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/services.User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/login": {
             "post": {
                 "description": "Login to the system",
                 "consumes": [
@@ -61,7 +118,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/product/": {
+        "/v1/product/": {
             "post": {
                 "description": "Menampilkan list product",
                 "consumes": [
@@ -84,38 +141,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/users/": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Get all users in the system",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get list of users",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/services.User"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users/create/": {
+        "/v1/users/create": {
             "post": {
                 "description": "Get all users in the system",
                 "consumes": [
@@ -139,32 +165,6 @@ const docTemplate = `{
                         }
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/services.User"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/users/detail/{id}": {
-            "get": {
-                "description": "Get all users in the system",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get detail of an user",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -275,6 +275,9 @@ const docTemplate = `{
                 "password": {
                     "type": "string",
                     "example": "password123"
+                },
+                "phone": {
+                    "type": "string"
                 }
             }
         }

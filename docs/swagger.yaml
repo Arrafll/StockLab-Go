@@ -66,6 +66,8 @@ definitions:
       password:
         example: password123
         type: string
+      phone:
+        type: string
     type: object
 info:
   contact:
@@ -77,7 +79,43 @@ info:
   title: StockLab
   version: "1.0"
 paths:
-  /api/v1/login:
+  /api/v1/users/:
+    get:
+      consumes:
+      - application/json
+      description: Get all users in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/services.User'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get list of users
+      tags:
+      - users
+  /api/v1/users/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get all users in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/services.User'
+            type: array
+      summary: Get detail of an user
+      tags:
+      - users
+  /v1/login:
     post:
       consumes:
       - application/json
@@ -103,7 +141,7 @@ paths:
       summary: User login
       tags:
       - auth
-  /api/v1/product/:
+  /v1/product/:
     post:
       consumes:
       - application/json
@@ -118,26 +156,7 @@ paths:
       summary: Product list
       tags:
       - product
-  /api/v1/users/:
-    get:
-      consumes:
-      - application/json
-      description: Get all users in the system
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/services.User'
-            type: array
-      security:
-      - BearerAuth: []
-      summary: Get list of users
-      tags:
-      - users
-  /api/v1/users/create/:
+  /v1/users/create:
     post:
       consumes:
       - application/json
@@ -149,23 +168,6 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/services.UserCreate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/services.User'
-            type: array
-      summary: Get detail of an user
-      tags:
-      - users
-  /api/v1/users/detail/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get all users in the system
       produces:
       - application/json
       responses:
