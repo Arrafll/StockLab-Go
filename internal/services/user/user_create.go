@@ -1,7 +1,8 @@
 package services
 
 import (
-	"encoding/json"
+	"encoding/base64"
+	"io"
 	"net/http"
 	"strings"
 
@@ -11,18 +12,20 @@ import (
 )
 
 type UserCreate struct {
-	Email    string `json:"email" example:andrerafli83@gmail.com"`
+	Email    string `json:"email" example:"andrerafli83@gmail.com"`
 	Password string `json:"password" example:"password123"`
 	Name     string `json:"name" example:"Andre"`
 	Phone    string `json:"phone" example:"09999999999"`
+	Avatar   string `json:"avatar" form:"avatar" example:"file"`
 }
 
 type UserCreateData struct {
-	ID    int64  `json:"id" example:"1"`
-	Email string `json:"email" example:"andrerafli83@gmail.com"`
-	Name  string `json:"name" example:"Andre"`
-	Phone string `json:"phone" example:"09999999999"`
-	Role  string `json:"role" example:"staff"`
+	ID     int64  `json:"id" example:"1"`
+	Email  string `json:"email" example:"andrerafli83@gmail.com"`
+	Name   string `json:"name" example:"Andre"`
+	Phone  string `json:"phone" example:"09999999999"`
+	Role   string `json:"role" example:"staff"`
+	Avatar string `json:"avatar" form:"avatar" example:"base64imagestring"`
 }
 
 type UserCreateSuccessResp struct {
@@ -37,69 +40,91 @@ type UserCreateFailResp struct {
 }
 
 // CreateUser godoc
-// @Summary Get detail of an user
-// @Description Get all users in the system
+// @Summary Create user with avatar
+// @Description Create a new user and upload avatar
 // @Tags users
-// @Accept  json
-// @Produce  json
-// @Success 200 {array} services.UserCreateSuccessResp
+// @Accept multipart/form-data
+// @Produce json
+// @Param email formData string true "Email"
+// @Param password formData string true "Password"
+// @Param name formData string true "Name"
+// @Param phone formData string false "Phone"
+// @Param avatar formData file true "Avatar image"
+// @Success 200 {object} services.UserCreateSuccessResp
 // @Failure 400 {object} services.UserCreateFailResp
+// @Failure 500 {object} services.UserCreateFailResp
 // @Router /stocklab-api/v1/users/create [post]
-// @Param user body UserCreate true "Data pengguna"
+// @Security BearerAuth
 func CreateUser(w http.ResponseWriter, r *http.Request) {
-	var newUser UserCreate
-	if err := json.NewDecoder(r.Body).Decode(&newUser); err != nil {
-		utils.RespondError(w, http.StatusBadRequest, "Invalid request")
+	// Parse multipart form (max 10MB)
+	if err := r.ParseMultipartForm(10 << 20); err != nil {
+		utils.RespondError(w, http.StatusBadRequest, "Invalid form data: "+err.Error())
 		return
 	}
 
-	if newUser.Email == "" || newUser.Password == "" || newUser.Name == "" {
+	email := strings.TrimSpace(r.FormValue("email"))
+	password := r.FormValue("password")
+	name := r.FormValue("name")
+	phone := r.FormValue("phone")
+
+	if email == "" || password == "" || name == "" {
 		utils.RespondError(w, http.StatusBadRequest, "Email, password, and name are required")
 		return
 	}
 
 	// Hash password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to hash password")
 		return
 	}
+
 	// Cek apakah email sudah ada
-	newUser.Email = strings.TrimSpace(newUser.Email)
-
-	newUser.Email = strings.TrimSpace(newUser.Email)
-
 	var exists bool
 	err = db.DB.QueryRow(
 		"SELECT EXISTS(SELECT 1 FROM users WHERE LOWER(TRIM(email)) = LOWER($1))",
-		newUser.Email,
+		email,
 	).Scan(&exists)
-
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Database error: "+err.Error())
 		return
 	}
-
 	if exists {
-		utils.RespondError(w, http.StatusConflict, newUser.Email+" is already registered")
+		utils.RespondError(w, http.StatusConflict, email+" is already registered")
+		return
+	}
+
+	// Ambil file avatar
+	file, _, err := r.FormFile("avatar")
+	if err != nil {
+		utils.RespondError(w, http.StatusBadRequest, "Failed to read avatar: "+err.Error())
+		return
+	}
+	defer file.Close()
+
+	avatarBytes, err := io.ReadAll(file)
+	if err != nil {
+		utils.RespondError(w, http.StatusInternalServerError, "Failed to read avatar bytes: "+err.Error())
 		return
 	}
 
 	// Insert user ke database
-	query := `INSERT INTO users (email, password, name, phone, role) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	var userID int64
-	err = db.DB.QueryRow(query, newUser.Email, string(hashedPassword), newUser.Name, newUser.Phone, "staff").Scan(&userID)
+	query := `INSERT INTO users (email, password, name, phone, role, avatar) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`
+	err = db.DB.QueryRow(query, email, string(hashedPassword), name, phone, "staff", avatarBytes).Scan(&userID)
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to create user: "+err.Error())
 		return
 	}
 
 	// Response sukses
-	response := map[string]interface{}{
-		"id":    userID,
-		"email": newUser.Email,
-		"name":  newUser.Name,
-		"phone": newUser.Phone,
+	response := UserCreateData{
+		ID:     userID,
+		Email:  email,
+		Name:   name,
+		Phone:  phone,
+		Role:   "staff",
+		Avatar: base64.StdEncoding.EncodeToString(avatarBytes),
 	}
 
 	utils.RespondSuccess(w, response, "User created successfully")

@@ -89,7 +89,88 @@
         },
         "/stocklab-api/v1/users/create": {
             "post": {
-                "description": "Get all users in the system",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new user and upload avatar",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create user with avatar",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Phone",
+                        "name": "phone",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Avatar image",
+                        "name": "avatar",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserCreateSuccessResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserCreateFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserCreateFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/users/delete/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete a user by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -99,32 +180,167 @@
                 "tags": [
                     "users"
                 ],
-                "summary": "Get detail of an user",
+                "summary": "Delete a user",
                 "parameters": [
                     {
-                        "description": "Data pengguna",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/services.UserCreate"
-                        }
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/services.UserCreateSuccessResp"
-                            }
+                            "$ref": "#/definitions/services.UserDeleteSuccessResp"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/services.UserCreateFailResp"
+                            "$ref": "#/definitions/services.UserDeleteFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserDeleteFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/users/update/{id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update an existing user and optionally upload a new avatar",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Update user with avatar",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Name",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Phone",
+                        "name": "phone",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Avatar image",
+                        "name": "avatar",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserUpdateSuccessResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserUpdateFailResp"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserUpdateFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserUpdateFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/users/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a single user by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get detail of a user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserDetailSuccessResp"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserDetailFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.UserDetailFailResp"
                         }
                     }
                 }
@@ -226,6 +442,10 @@
         "services.User": {
             "type": "object",
             "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
                 "email": {
                     "type": "string",
                     "example": "andrerafli83@gmail.com"
@@ -248,29 +468,13 @@
                 }
             }
         },
-        "services.UserCreate": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "Andre"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "password123"
-                },
-                "phone": {
-                    "type": "string",
-                    "example": "09999999999"
-                }
-            }
-        },
         "services.UserCreateData": {
             "type": "object",
             "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
                 "email": {
                     "type": "string",
                     "example": "andrerafli83@gmail.com"
@@ -322,6 +526,90 @@
                 }
             }
         },
+        "services.UserDeleteFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to delete user"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.UserDeleteSuccessResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "User fetched successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "services.UserDetail": {
+            "type": "object",
+            "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "andrerafli83@gmail.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Andre"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "081234567890"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "staff"
+                }
+            }
+        },
+        "services.UserDetailFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to fetch user"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.UserDetailSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/services.UserDetail"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "User fetched successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
         "services.UserListFailResp": {
             "type": "object",
             "properties": {
@@ -339,7 +627,52 @@
             "type": "object",
             "properties": {
                 "data": {
-                    "$ref": "#/definitions/services.User"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.User"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Login successful"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "services.UserUpdateData": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "andrerafli83@gmail.com"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "services.UserUpdateFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Invalid credentials"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.UserUpdateSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/services.UserUpdateData"
                 },
                 "message": {
                     "type": "string",

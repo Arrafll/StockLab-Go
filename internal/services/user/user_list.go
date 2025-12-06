@@ -9,17 +9,18 @@ import (
 
 // User model
 type User struct {
-	ID    int    `json:"id" example:"1"`
-	Email string `json:"email" example:"andrerafli83@gmail.com"`
-	Name  string `json:"name" example:"Andre"`
-	Phone string `json:"phone" example:"081234567890"`
-	Role  string `json:"role" example:"staff"`
+	ID     int    `json:"id" example:"1"`
+	Email  string `json:"email" example:"andrerafli83@gmail.com"`
+	Name   string `json:"name" example:"Andre"`
+	Phone  string `json:"phone" example:"081234567890"`
+	Role   string `json:"role" example:"staff"`
+	Avatar string `json:"avatar" form:"avatar" example:"base64imagestring"`
 }
 
 type UserListSuccessResp struct {
 	Status  string `json:"status" example:"success"`
 	Message string `json:"message" example:"Login successful"`
-	Data    User   `json:"data"`
+	Data    []User `json:"data"`
 }
 
 type UserListFailResp struct {
@@ -50,7 +51,7 @@ func GetUserList(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var u User
-		if err := rows.Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role); err != nil {
+		if err := rows.Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &u.Avatar); err != nil {
 			utils.RespondError(w, http.StatusInternalServerError, "Failed to scan user: "+err.Error())
 			return
 		}

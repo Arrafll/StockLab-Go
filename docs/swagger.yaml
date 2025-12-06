@@ -48,6 +48,9 @@ definitions:
     type: object
   services.User:
     properties:
+      avatar:
+        example: base64imagestring
+        type: string
       email:
         example: andrerafli83@gmail.com
         type: string
@@ -64,22 +67,11 @@ definitions:
         example: staff
         type: string
     type: object
-  services.UserCreate:
-    properties:
-      email:
-        type: string
-      name:
-        example: Andre
-        type: string
-      password:
-        example: password123
-        type: string
-      phone:
-        example: "09999999999"
-        type: string
-    type: object
   services.UserCreateData:
     properties:
+      avatar:
+        example: base64imagestring
+        type: string
       email:
         example: andrerafli83@gmail.com
         type: string
@@ -116,6 +108,65 @@ definitions:
         example: success
         type: string
     type: object
+  services.UserDeleteFailResp:
+    properties:
+      message:
+        example: Failed to delete user
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.UserDeleteSuccessResp:
+    properties:
+      message:
+        example: User fetched successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.UserDetail:
+    properties:
+      avatar:
+        example: base64imagestring
+        type: string
+      email:
+        example: andrerafli83@gmail.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Andre
+        type: string
+      phone:
+        example: "081234567890"
+        type: string
+      role:
+        example: staff
+        type: string
+    type: object
+  services.UserDetailFailResp:
+    properties:
+      message:
+        example: Failed to fetch user
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.UserDetailSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.UserDetail'
+      message:
+        example: User fetched successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   services.UserListFailResp:
     properties:
       message:
@@ -128,7 +179,38 @@ definitions:
   services.UserListSuccessResp:
     properties:
       data:
-        $ref: '#/definitions/services.User'
+        items:
+          $ref: '#/definitions/services.User'
+        type: array
+      message:
+        example: Login successful
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.UserUpdateData:
+    properties:
+      email:
+        example: andrerafli83@gmail.com
+        type: string
+      id:
+        example: 1
+        type: integer
+    type: object
+  services.UserUpdateFailResp:
+    properties:
+      message:
+        example: Invalid credentials
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.UserUpdateSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.UserUpdateData'
       message:
         example: Login successful
         type: string
@@ -193,32 +275,171 @@ paths:
       summary: Get list of users
       tags:
       - users
-  /stocklab-api/v1/users/create:
-    post:
+  /stocklab-api/v1/users/{id}:
+    get:
       consumes:
       - application/json
-      description: Get all users in the system
+      description: Get a single user by ID
       parameters:
-      - description: Data pengguna
-        in: body
-        name: user
+      - description: User ID
+        in: path
+        name: id
         required: true
-        schema:
-          $ref: '#/definitions/services.UserCreate'
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/services.UserCreateSuccessResp'
-            type: array
+            $ref: '#/definitions/services.UserDetailSuccessResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/services.UserDetailFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.UserDetailFailResp'
+      security:
+      - BearerAuth: []
+      summary: Get detail of a user
+      tags:
+      - users
+  /stocklab-api/v1/users/create:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new user and upload avatar
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Phone
+        in: formData
+        name: phone
+        type: string
+      - description: Avatar image
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.UserCreateSuccessResp'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/services.UserCreateFailResp'
-      summary: Get detail of an user
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.UserCreateFailResp'
+      security:
+      - BearerAuth: []
+      summary: Create user with avatar
+      tags:
+      - users
+  /stocklab-api/v1/users/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.UserDeleteSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.UserDeleteFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.UserDeleteFailResp'
+      security:
+      - BearerAuth: []
+      summary: Delete a user
+      tags:
+      - users
+  /stocklab-api/v1/users/update/{id}:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update an existing user and optionally upload a new avatar
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Email
+        in: formData
+        name: email
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        type: string
+      - description: Name
+        in: formData
+        name: name
+        type: string
+      - description: Phone
+        in: formData
+        name: phone
+        type: string
+      - description: Avatar image
+        in: formData
+        name: avatar
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.UserUpdateSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.UserUpdateFailResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/services.UserUpdateFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.UserUpdateFailResp'
+      security:
+      - BearerAuth: []
+      summary: Update user with avatar
       tags:
       - users
   /v1/product/:

@@ -31,8 +31,10 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 		r.Route("/users", func(r chi.Router) {
 			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
 			r.Get("/", userService.GetUserList)
-			// r.Get("/detail/{id}", userService.GetUserDetail)
 			r.Post("/create", userService.CreateUser)
+			r.Put("/update", userService.UpdateUser)
+			r.Get("/detail/{id}", userService.GetUserDetail)
+			r.Delete("/delete/{id}", userService.DeleteUser)
 		})
 
 		r.Route("/product", func(r chi.Router) {
