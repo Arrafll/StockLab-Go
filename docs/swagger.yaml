@@ -275,37 +275,6 @@ paths:
       summary: Get list of users
       tags:
       - users
-  /stocklab-api/v1/users/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get a single user by ID
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/services.UserDetailSuccessResp'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/services.UserDetailFailResp'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/services.UserDetailFailResp'
-      security:
-      - BearerAuth: []
-      summary: Get detail of a user
-      tags:
-      - users
   /stocklab-api/v1/users/create:
     post:
       consumes:
@@ -385,6 +354,37 @@ paths:
       security:
       - BearerAuth: []
       summary: Delete a user
+      tags:
+      - users
+  /stocklab-api/v1/users/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a single user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.UserDetailSuccessResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/services.UserDetailFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.UserDetailFailResp'
+      security:
+      - BearerAuth: []
+      summary: Get detail of a user
       tags:
       - users
   /stocklab-api/v1/users/update/{id}:
