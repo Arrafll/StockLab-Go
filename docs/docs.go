@@ -41,7 +41,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/services.LoginRequest"
+                            "$ref": "#/definitions/services.AuthLoginParamRequest"
                         }
                     }
                 ],
@@ -49,16 +49,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/services.LoginResponse"
+                            "$ref": "#/definitions/services.AuthLoginSuccessResponse"
                         }
                     },
-                    "400": {
-                        "description": "Request invalid",
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/services.AuthLoginFailResponse"
                         }
                     }
                 }
@@ -183,7 +180,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "services.LoginRequest": {
+        "services.AuthLoginData": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+            }
+        },
+        "services.AuthLoginFailResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Invalid credentials"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.AuthLoginParamRequest": {
             "type": "object",
             "properties": {
                 "email": {
@@ -196,12 +215,19 @@ const docTemplate = `{
                 }
             }
         },
-        "services.LoginResponse": {
+        "services.AuthLoginSuccessResponse": {
             "type": "object",
             "properties": {
-                "token": {
+                "data": {
+                    "$ref": "#/definitions/services.AuthLoginData"
+                },
+                "message": {
                     "type": "string",
-                    "example": "eyJhbGciOiJI..."
+                    "example": "Login successful"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
                 }
             }
         },

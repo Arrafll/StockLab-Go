@@ -1,16 +1,26 @@
+version: "3.9"
+
 services:
   api:
-    build:
-      context: .
-    env_file:
-      - .env.production
+    image: arrafll/stocklab-go:latest
+    container_name: stocklab
+    restart: always
     ports:
       - "8080:8080"
-    restart: always
-    networks:
-      - appnet
+    env_file:
+      - .env.production
+    depends_on:
+      - db
 
-  postgres:
+  db:
+    image: postgres:16
+    container_name: stocklab-db
     restart: always
     env_file:
       - .env.production
+    mem_limit: 512m
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

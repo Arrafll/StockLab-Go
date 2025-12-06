@@ -1,5 +1,20 @@
 definitions:
-  services.LoginRequest:
+  services.AuthLoginData:
+    properties:
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  services.AuthLoginFailResponse:
+    properties:
+      message:
+        example: Invalid credentials
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.AuthLoginParamRequest:
     properties:
       email:
         example: andrerafli83@gmail.com
@@ -8,10 +23,15 @@ definitions:
         example: password123
         type: string
     type: object
-  services.LoginResponse:
+  services.AuthLoginSuccessResponse:
     properties:
-      token:
-        example: eyJhbGciOiJI...
+      data:
+        $ref: '#/definitions/services.AuthLoginData'
+      message:
+        example: Login successful
+        type: string
+      status:
+        example: success
         type: string
     type: object
   services.ProductResponse:
@@ -68,20 +88,18 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/services.LoginRequest'
+          $ref: '#/definitions/services.AuthLoginParamRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.LoginResponse'
-        "400":
-          description: Request invalid
+            $ref: '#/definitions/services.AuthLoginSuccessResponse'
+        "401":
+          description: Unauthorized
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/services.AuthLoginFailResponse'
       summary: User login
       tags:
       - auth

@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   postgres:
+    container_name: stocklab_db
     image: postgres:16
     volumes:
       - postgres_data:/var/lib/postgresql/data

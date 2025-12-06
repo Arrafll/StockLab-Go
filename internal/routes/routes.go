@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	_ "github.com/Arrafll/StockLab-Go/docs" // <-- wajib ada
+	"github.com/Arrafll/StockLab-Go/internal/config"
 	authService "github.com/Arrafll/StockLab-Go/internal/services/auth"
 	productService "github.com/Arrafll/StockLab-Go/internal/services/product"
 	userService "github.com/Arrafll/StockLab-Go/internal/services/user"
@@ -11,7 +12,7 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
-func RegisterRoutes() http.Handler {
+func RegisterRoutes(cfg *config.Config) http.Handler {
 
 	r := chi.NewRouter()
 
@@ -22,17 +23,20 @@ func RegisterRoutes() http.Handler {
 
 	// API Version 1
 	r.Route("/api/v1", func(r chi.Router) {
-
 		// Login Routes
-		r.Post("/login", authService.Login)
+		r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
+			authService.Login(w, r, cfg)
+		})
 		// User routes
 		r.Route("/users", func(r chi.Router) {
+			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
 			r.Get("/", userService.GetUserList)
 			r.Get("/detail/{id}", userService.GetUserDetail)
 			r.Post("/create", userService.CreateUser)
 		})
 
 		r.Route("/product", func(r chi.Router) {
+			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
 			r.Post("/", productService.GetProducts)
 		})
 
