@@ -44,7 +44,7 @@ type UserDetailFailResp struct {
 // @Failure 404 {object} services.UserDetailFailResp
 // @Failure 500 {object} services.UserDetailFailResp
 // @Param id path int true "User ID"
-// @Router /stocklab-api/v1/users/{id} [get]
+// @Router /stocklab-api/v1/users/detail/{id} [get]
 // @Security BearerAuth
 func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 	idStr := chi.URLParam(r, "id")

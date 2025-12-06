@@ -40,7 +40,7 @@ type UserListFailResp struct {
 // @Security BearerAuth
 func GetUserList(w http.ResponseWriter, r *http.Request) {
 	// Query semua user
-	rows, err := db.DB.Query("SELECT id, email, name, phone, role FROM users ORDER BY id ASC")
+	rows, err := db.DB.Query("SELECT id, email, name, phone, role, avatar FROM users ORDER BY id ASC")
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to fetch users: "+err.Error())
 		return
