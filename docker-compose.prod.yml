@@ -11,6 +11,8 @@ services:
       - .env.production
     depends_on:
       - db
+    networks:
+      - appnet
 
   db:
     image: postgres:16
@@ -21,6 +23,8 @@ services:
     mem_limit: 512m
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - appnet
 
 volumes:
   postgres_data:
