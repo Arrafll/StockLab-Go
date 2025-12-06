@@ -11,8 +11,7 @@ services:
       - .env.production
     depends_on:
       - db
-    networks:
-      - appnet
+      - migrate
 
   db:
     image: postgres:16
@@ -20,11 +19,21 @@ services:
     restart: always
     env_file:
       - .env.production
-    mem_limit: 512m
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - appnet
+
+  migrate:
+    image: migrate/migrate
+    depends_on:
+      - db
+    volumes:
+      - ./migrations:/migrations
+    command: [
+      "-path=/migrations",
+      "-database=postgres://root:stocklabpass@db:5432/db_stocklab?sslmode=disable",
+      "up"
+    ]
+    restart: "on-failure"
 
 volumes:
   postgres_data:
