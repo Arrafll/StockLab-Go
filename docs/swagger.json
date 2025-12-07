@@ -374,6 +374,10 @@
         "services.AuthLoginData": {
             "type": "object",
             "properties": {
+                "role": {
+                    "type": "string",
+                    "example": "admin"
+                },
                 "token": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -518,7 +522,7 @@
                 },
                 "message": {
                     "type": "string",
-                    "example": "Login successful"
+                    "example": "User created successfully"
                 },
                 "status": {
                     "type": "string",
@@ -544,7 +548,7 @@
             "properties": {
                 "message": {
                     "type": "string",
-                    "example": "User fetched successfully"
+                    "example": "User deleted successfully"
                 },
                 "status": {
                     "type": "string",
@@ -634,7 +638,7 @@
                 },
                 "message": {
                     "type": "string",
-                    "example": "Login successful"
+                    "example": "Users fetched successfully"
                 },
                 "status": {
                     "type": "string",
@@ -645,6 +649,10 @@
         "services.UserUpdateData": {
             "type": "object",
             "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
                 "email": {
                     "type": "string",
                     "example": "andrerafli83@gmail.com"
@@ -652,6 +660,18 @@
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Andre"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "09999999999"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "staff"
                 }
             }
         },
@@ -660,7 +680,7 @@
             "properties": {
                 "message": {
                     "type": "string",
-                    "example": "Invalid credentials"
+                    "example": "Invalid parameter"
                 },
                 "status": {
                     "type": "string",
@@ -676,7 +696,7 @@
                 },
                 "message": {
                     "type": "string",
-                    "example": "Login successful"
+                    "example": "User updated successfully"
                 },
                 "status": {
                     "type": "string",

@@ -382,6 +382,10 @@ const docTemplate = `{
         "services.AuthLoginData": {
             "type": "object",
             "properties": {
+                "role": {
+                    "type": "string",
+                    "example": "admin"
+                },
                 "token": {
                     "type": "string",
                     "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -526,7 +530,7 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string",
-                    "example": "Login successful"
+                    "example": "User created successfully"
                 },
                 "status": {
                     "type": "string",
@@ -552,7 +556,7 @@ const docTemplate = `{
             "properties": {
                 "message": {
                     "type": "string",
-                    "example": "User fetched successfully"
+                    "example": "User deleted successfully"
                 },
                 "status": {
                     "type": "string",
@@ -642,7 +646,7 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string",
-                    "example": "Login successful"
+                    "example": "Users fetched successfully"
                 },
                 "status": {
                     "type": "string",
@@ -653,6 +657,10 @@ const docTemplate = `{
         "services.UserUpdateData": {
             "type": "object",
             "properties": {
+                "avatar": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
                 "email": {
                     "type": "string",
                     "example": "andrerafli83@gmail.com"
@@ -660,6 +668,18 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Andre"
+                },
+                "phone": {
+                    "type": "string",
+                    "example": "09999999999"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "staff"
                 }
             }
         },
@@ -668,7 +688,7 @@ const docTemplate = `{
             "properties": {
                 "message": {
                     "type": "string",
-                    "example": "Invalid credentials"
+                    "example": "Invalid parameter"
                 },
                 "status": {
                     "type": "string",
@@ -684,7 +704,7 @@ const docTemplate = `{
                 },
                 "message": {
                     "type": "string",
-                    "example": "Login successful"
+                    "example": "User updated successfully"
                 },
                 "status": {
                     "type": "string",

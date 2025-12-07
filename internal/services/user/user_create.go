@@ -30,7 +30,7 @@ type UserCreateData struct {
 
 type UserCreateSuccessResp struct {
 	Status  string         `json:"status" example:"success"`
-	Message string         `json:"message" example:"Login successful"`
+	Message string         `json:"message" example:"User created successfully"`
 	Data    UserCreateData `json:"data"`
 }
 

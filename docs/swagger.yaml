@@ -1,6 +1,9 @@
 definitions:
   services.AuthLoginData:
     properties:
+      role:
+        example: admin
+        type: string
       token:
         example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         type: string
@@ -102,7 +105,7 @@ definitions:
       data:
         $ref: '#/definitions/services.UserCreateData'
       message:
-        example: Login successful
+        example: User created successfully
         type: string
       status:
         example: success
@@ -120,7 +123,7 @@ definitions:
   services.UserDeleteSuccessResp:
     properties:
       message:
-        example: User fetched successfully
+        example: User deleted successfully
         type: string
       status:
         example: success
@@ -183,7 +186,7 @@ definitions:
           $ref: '#/definitions/services.User'
         type: array
       message:
-        example: Login successful
+        example: Users fetched successfully
         type: string
       status:
         example: success
@@ -191,17 +194,29 @@ definitions:
     type: object
   services.UserUpdateData:
     properties:
+      avatar:
+        example: base64imagestring
+        type: string
       email:
         example: andrerafli83@gmail.com
         type: string
       id:
         example: 1
         type: integer
+      name:
+        example: Andre
+        type: string
+      phone:
+        example: "09999999999"
+        type: string
+      role:
+        example: staff
+        type: string
     type: object
   services.UserUpdateFailResp:
     properties:
       message:
-        example: Invalid credentials
+        example: Invalid parameter
         type: string
       status:
         example: error
@@ -212,7 +227,7 @@ definitions:
       data:
         $ref: '#/definitions/services.UserUpdateData'
       message:
-        example: Login successful
+        example: User updated successfully
         type: string
       status:
         example: success

@@ -12,7 +12,7 @@ import (
 // UserDetailSuccessResp untuk response detail user
 type UserDeleteSuccessResp struct {
 	Status  string `json:"status" example:"success"`
-	Message string `json:"message" example:"User fetched successfully"`
+	Message string `json:"message" example:"User deleted successfully"`
 }
 
 // UserDeleteFailResp untuk error
@@ -68,8 +68,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	// Response sukses
 	response := map[string]interface{}{
-		"id":      id,
-		"message": "User deleted successfully",
+		"id": id,
 	}
 	utils.RespondSuccess(w, response, "User deleted successfully")
 }

@@ -20,7 +20,7 @@ type User struct {
 
 type UserListSuccessResp struct {
 	Status  string `json:"status" example:"success"`
-	Message string `json:"message" example:"Login successful"`
+	Message string `json:"message" example:"Users fetched successfully"`
 	Data    []User `json:"data"`
 }
 

@@ -13,20 +13,32 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type UserUpdate struct {
+	Email    string `json:"email" example:"andrerafli83@gmail.com"`
+	Password string `json:"password" example:"password123"`
+	Name     string `json:"name" example:"Andre"`
+	Phone    string `json:"phone" example:"09999999999"`
+	Avatar   string `json:"avatar" form:"avatar" example:"file"`
+}
+
 type UserUpdateData struct {
-	ID    int64  `json:"id" example:"1"`
-	Email string `json:"email" example:"andrerafli83@gmail.com"`
+	ID     int64  `json:"id" example:"1"`
+	Email  string `json:"email" example:"andrerafli83@gmail.com"`
+	Name   string `json:"name" example:"Andre"`
+	Phone  string `json:"phone" example:"09999999999"`
+	Role   string `json:"role" example:"staff"`
+	Avatar string `json:"avatar" form:"avatar" example:"base64imagestring"`
 }
 
 type UserUpdateSuccessResp struct {
 	Status  string         `json:"status" example:"success"`
-	Message string         `json:"message" example:"Login successful"`
+	Message string         `json:"message" example:"User updated successfully"`
 	Data    UserUpdateData `json:"data"`
 }
 
 type UserUpdateFailResp struct {
 	Status  string `json:"status" example:"error"`
-	Message string `json:"message" example:"Invalid credentials"`
+	Message string `json:"message" example:"Invalid parameter"`
 }
 
 // UpdateUser godoc
