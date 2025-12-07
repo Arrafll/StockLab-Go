@@ -61,8 +61,9 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 
 	// Query user by ID
 	var u UserDetail
-	query := `SELECT id, email, name, phone, role FROM users WHERE id = $1`
-	err = db.DB.QueryRow(query, id).Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &u.Avatar)
+	var avatar *string
+	query := `SELECT id, email, name, phone, role, avatar FROM users WHERE id = $1`
+	err = db.DB.QueryRow(query, id).Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &avatar)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			utils.RespondError(w, http.StatusNotFound, "User not found")
@@ -70,6 +71,12 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 		}
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to fetch user: "+err.Error())
 		return
+	}
+
+	if avatar != nil {
+		u.Avatar = *avatar
+	} else {
+		u.Avatar = ""
 	}
 
 	// Response sukses

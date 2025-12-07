@@ -51,9 +51,17 @@ func GetUserList(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var u User
-		if err := rows.Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &u.Avatar); err != nil {
+		var avatar *string
+		if err := rows.Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &avatar); err != nil {
 			utils.RespondError(w, http.StatusInternalServerError, "Failed to scan user: "+err.Error())
 			return
+		}
+
+		//Condition null image
+		if avatar != nil {
+			u.Avatar = *avatar
+		} else {
+			u.Avatar = ""
 		}
 		users = append(users, u)
 	}

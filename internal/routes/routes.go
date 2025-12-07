@@ -17,8 +17,9 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 	r := chi.NewRouter()
 
 	// Swagger UI route
+	swaggerUrl := cfg.SwaggerURL
 	r.Get("/documentation*", httpSwagger.Handler(
-		httpSwagger.URL("/stocklab-api/documentation/doc.json"), // URL ke swagger.json
+		httpSwagger.URL(swaggerUrl+"documentation/doc.json"), // URL ke swagger.json
 	))
 
 	// API Version 1
@@ -38,6 +39,11 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 		})
 
 		r.Route("/product", func(r chi.Router) {
+			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
+			r.Post("/", productService.GetProducts)
+		})
+
+		r.Route("/categories", func(r chi.Router) {
 			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
 			r.Post("/", productService.GetProducts)
 		})

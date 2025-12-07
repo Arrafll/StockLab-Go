@@ -1,7 +1,10 @@
 package config
 
 import (
+	"log"
 	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
@@ -11,6 +14,7 @@ type Config struct {
 	DBName     string
 	DBPort     string
 	JWTSecret  string
+	SwaggerURL string
 }
 
 func Load() *Config {
@@ -21,6 +25,7 @@ func Load() *Config {
 		DBName:     getEnv("DB_NAME", "db_stocklab"),
 		DBPort:     getEnv("DB_PORT", "5432"),
 		JWTSecret:  getEnv("JWT_SECRET", "supersecretkey_change_me"),
+		SwaggerURL: getEnv("SWAGGER_URL", "/stocklab-api/"),
 	}
 
 }
@@ -30,4 +35,11 @@ func getEnv(key, defaultVal string) string {
 		return v
 	}
 	return defaultVal
+}
+
+func init() {
+	// Load .env file automatically at startup
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using system environment variables")
+	}
 }
