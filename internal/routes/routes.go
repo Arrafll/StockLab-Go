@@ -33,7 +33,7 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
 			r.Get("/", userService.GetUserList)
 			r.Post("/create", userService.CreateUser)
-			r.Put("/update", userService.UpdateUser)
+			r.Put("/update/{id}", userService.UpdateUser)
 			r.Get("/detail/{id}", userService.GetUserDetail)
 			r.Delete("/delete/{id}", userService.DeleteUser)
 		})

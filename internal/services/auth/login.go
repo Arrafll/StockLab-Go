@@ -20,6 +20,7 @@ type AuthLoginParamRequest struct {
 
 type AuthLoginData struct {
 	Token string `json:"token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
+	Role  string `json:"role" example:"admin"`
 }
 
 type AuthLoginSuccessResponse struct {
@@ -55,8 +56,9 @@ func Login(w http.ResponseWriter, r *http.Request, cfg *config.Config) {
 
 	var storedHash string
 	var userID int64
-	err := db.DB.QueryRowContext(ctx, `SELECT id,password FROM users WHERE email=$1 LIMIT 1`, req.Email).
-		Scan(&userID, &storedHash)
+	var role string
+	err := db.DB.QueryRowContext(ctx, `SELECT id,password,role FROM users WHERE email=$1 LIMIT 1`, req.Email).
+		Scan(&userID, &storedHash, &role)
 
 	if err == sql.ErrNoRows {
 		http.Error(w, "invalid credentials", http.StatusUnauthorized)
@@ -77,5 +79,5 @@ func Login(w http.ResponseWriter, r *http.Request, cfg *config.Config) {
 		http.Error(w, "failed to generate token", http.StatusInternalServerError)
 		return
 	}
-	utils.RespondSuccess(w, map[string]string{"token": tokenStr}, "Login successful")
+	utils.RespondSuccess(w, map[string]string{"token": tokenStr, "role": role}, "Login successful")
 }

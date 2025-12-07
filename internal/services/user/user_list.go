@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/base64"
 	"net/http"
 
 	"github.com/Arrafll/StockLab-Go/internal/db"
@@ -51,7 +52,7 @@ func GetUserList(w http.ResponseWriter, r *http.Request) {
 
 	for rows.Next() {
 		var u User
-		var avatar *string
+		var avatar []byte
 		if err := rows.Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &avatar); err != nil {
 			utils.RespondError(w, http.StatusInternalServerError, "Failed to scan user: "+err.Error())
 			return
@@ -59,7 +60,7 @@ func GetUserList(w http.ResponseWriter, r *http.Request) {
 
 		//Condition null image
 		if avatar != nil {
-			u.Avatar = *avatar
+			u.Avatar = base64.StdEncoding.EncodeToString(avatar)
 		} else {
 			u.Avatar = ""
 		}

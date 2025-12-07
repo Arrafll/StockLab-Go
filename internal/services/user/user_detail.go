@@ -2,6 +2,7 @@ package services
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -61,7 +62,7 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 
 	// Query user by ID
 	var u UserDetail
-	var avatar *string
+	var avatar []byte
 	query := `SELECT id, email, name, phone, role, avatar FROM users WHERE id = $1`
 	err = db.DB.QueryRow(query, id).Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &avatar)
 	if err != nil {
@@ -74,7 +75,7 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if avatar != nil {
-		u.Avatar = *avatar
+		u.Avatar = base64.StdEncoding.EncodeToString(avatar)
 	} else {
 		u.Avatar = ""
 	}
