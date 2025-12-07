@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Arrafll/StockLab-Go/internal/config"
@@ -19,8 +20,9 @@ type AuthLoginParamRequest struct {
 }
 
 type AuthLoginData struct {
-	Token string `json:"token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
-	Role  string `json:"role" example:"admin"`
+	Token  string `json:"token" example:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."`
+	Role   string `json:"role" example:"admin"`
+	UserId string `json:"user_id" example:"1"`
 }
 
 type AuthLoginSuccessResponse struct {
@@ -79,5 +81,5 @@ func Login(w http.ResponseWriter, r *http.Request, cfg *config.Config) {
 		http.Error(w, "failed to generate token", http.StatusInternalServerError)
 		return
 	}
-	utils.RespondSuccess(w, map[string]string{"token": tokenStr, "role": role}, "Login successful")
+	utils.RespondSuccess(w, map[string]string{"token": tokenStr, "role": role, "user_id": strconv.FormatInt(userID, 10)}, "Login successful")
 }
