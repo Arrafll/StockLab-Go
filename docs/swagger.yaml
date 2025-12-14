@@ -40,6 +40,113 @@ definitions:
         example: success
         type: string
     type: object
+  services.Category:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Vitamin
+        type: string
+    type: object
+  services.CategoryCreateData:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Vitamin
+        type: string
+    type: object
+  services.CategoryCreateFailResp:
+    properties:
+      message:
+        example: Invalid parameter
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.CategoryCreateSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.CategoryCreateData'
+      message:
+        example: Category created successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.CategoryDeleteFailResp:
+    properties:
+      message:
+        example: Failed to delete category
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.CategoryDeleteSuccessResp:
+    properties:
+      message:
+        example: Category deleted successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.CategoryFailResp:
+    properties:
+      message:
+        example: Failed to fetch categories
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.CategorySuccessResp:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/services.Category'
+        type: array
+      message:
+        example: Categories fetched successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.CategoryUpdateData:
+    properties:
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Vitamin
+        type: string
+    type: object
+  services.CategoryUpdateFailResp:
+    properties:
+      message:
+        example: Invalid parameter
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.CategoryUpdateSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.CategoryUpdateData'
+      message:
+        example: User updated successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   services.ProductResponse:
     properties:
       price:
@@ -246,32 +353,128 @@ info:
   title: StockLab
   version: "1.0"
 paths:
-  /stocklab-api/v1/login:
-    post:
+  /stocklab-api/v1/category:
+    get:
       consumes:
       - application/json
-      description: Login to the system
-      parameters:
-      - description: User login credentials
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/services.AuthLoginParamRequest'
+      description: Get all category in the system
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/services.AuthLoginSuccessResponse'
-        "401":
-          description: Unauthorized
+            $ref: '#/definitions/services.CategorySuccessResp'
+        "500":
+          description: Internal Server Error
           schema:
-            $ref: '#/definitions/services.AuthLoginFailResponse'
-      summary: User login
+            $ref: '#/definitions/services.CategoryFailResp'
+      security:
+      - BearerAuth: []
+      summary: Get list of category
       tags:
-      - auth
+      - category
+  /stocklab-api/v1/category/create:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a category
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.CategoryCreateSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.CategoryCreateFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.CategoryCreateFailResp'
+      security:
+      - BearerAuth: []
+      summary: Create category for products
+      tags:
+      - category
+  /stocklab-api/v1/category/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      parameters:
+      - description: Category Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.CategoryDeleteSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.CategoryDeleteFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.CategoryDeleteFailResp'
+      security:
+      - BearerAuth: []
+      summary: Delete a user
+      tags:
+      - category
+  /stocklab-api/v1/category/update/{id}:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update an existing category product data
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Name
+        in: formData
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.CategoryUpdateSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.CategoryUpdateFailResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/services.CategoryUpdateFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.CategoryUpdateFailResp'
+      security:
+      - BearerAuth: []
+      summary: Update category product
+      tags:
+      - category
   /stocklab-api/v1/users:
     get:
       consumes:
@@ -460,6 +663,32 @@ paths:
       summary: Update user with avatar
       tags:
       - users
+  /v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Login to the system
+      parameters:
+      - description: User login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.AuthLoginParamRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.AuthLoginSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/services.AuthLoginFailResponse'
+      summary: User login
+      tags:
+      - auth
   /v1/product/:
     post:
       consumes:

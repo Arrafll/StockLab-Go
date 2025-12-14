@@ -6,6 +6,7 @@ import (
 	_ "github.com/Arrafll/StockLab-Go/docs" // <-- wajib ada
 	"github.com/Arrafll/StockLab-Go/internal/config"
 	authService "github.com/Arrafll/StockLab-Go/internal/services/auth"
+	categoryService "github.com/Arrafll/StockLab-Go/internal/services/category"
 	productService "github.com/Arrafll/StockLab-Go/internal/services/product"
 	userService "github.com/Arrafll/StockLab-Go/internal/services/user"
 	"github.com/go-chi/chi/v5"
@@ -43,9 +44,12 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 			r.Post("/", productService.GetProducts)
 		})
 
-		r.Route("/categories", func(r chi.Router) {
+		r.Route("/category", func(r chi.Router) {
 			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
-			r.Post("/", productService.GetProducts)
+			r.Get("/", categoryService.GetCategoryList)
+			r.Post("/create", categoryService.CreateCategory)
+			r.Put("/update/{id}", categoryService.UpdateCategory)
+			r.Delete("/delete/{id}", categoryService.DeleteCategory)
 		})
 
 	})
