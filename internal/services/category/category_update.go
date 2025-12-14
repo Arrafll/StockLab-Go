@@ -33,7 +33,7 @@ type CategoryUpdateFailResp struct {
 // UpdateCategory godoc
 // @Summary Update category product
 // @Description Update an existing category product data
-// @Tags category
+// @Tags categories
 // @Accept multipart/form-data
 // @Produce json
 // @Param id path int true "Category ID"
@@ -42,18 +42,18 @@ type CategoryUpdateFailResp struct {
 // @Failure 400 {object} services.CategoryUpdateFailResp
 // @Failure 404 {object} services.CategoryUpdateFailResp
 // @Failure 500 {object} services.CategoryUpdateFailResp
-// @Router /stocklab-api/v1/category/update/{id} [put]
+// @Router /stocklab-api/v1/categories/update/{id} [patch]
 // @Security BearerAuth
 func UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	// Ambil ID dari URL
 	idStr := chi.URLParam(r, "id")
 	if idStr == "" {
-		utils.RespondError(w, http.StatusBadRequest, "Categgory ID is required")
+		utils.RespondError(w, http.StatusBadRequest, "Category Id is required")
 		return
 	}
 	catId, err := strconv.Atoi(idStr)
 	if err != nil {
-		utils.RespondError(w, http.StatusBadRequest, "Categgory ID must be a number")
+		utils.RespondError(w, http.StatusBadRequest, "Category Id must be a number")
 		return
 	}
 

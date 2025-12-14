@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/Arrafll/StockLab-Go/internal/db"
 	"github.com/Arrafll/StockLab-Go/internal/utils"
@@ -14,12 +15,13 @@ import (
 
 // User model
 type UserDetail struct {
-	ID     int    `json:"id" example:"1"`
-	Email  string `json:"email" example:"andrerafli83@gmail.com"`
-	Name   string `json:"name" example:"Andre"`
-	Phone  string `json:"phone" example:"081234567890"`
-	Role   string `json:"role" example:"staff"`
-	Avatar string `json:"avatar" form:"avatar" example:"base64imagestring"`
+	ID     int       `json:"id" example:"1"`
+	Email  string    `json:"email" example:"andrerafli83@gmail.com"`
+	Name   string    `json:"name" example:"Andre"`
+	Phone  string    `json:"phone" example:"081234567890"`
+	Role   string    `json:"role" example:"staff"`
+	Joined time.Time `json:"joined" example:"2025-12-14"`
+	Avatar string    `json:"avatar"example:"base64imagestring"`
 }
 
 // UserDetailSuccessResp untuk response detail user
@@ -63,8 +65,9 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 	// Query user by ID
 	var u UserDetail
 	var avatar []byte
-	query := `SELECT id, email, name, phone, role, avatar FROM users WHERE id = $1`
-	err = db.DB.QueryRow(query, id).Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &avatar)
+	var joined time.Time
+	query := `SELECT id, email, name, phone, role, avatar, created_at FROM users WHERE id = $1`
+	err = db.DB.QueryRow(query, id).Scan(&u.ID, &u.Email, &u.Name, &u.Phone, &u.Role, &avatar, &joined)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			utils.RespondError(w, http.StatusNotFound, "User not found")
@@ -79,6 +82,8 @@ func GetUserDetail(w http.ResponseWriter, r *http.Request) {
 	} else {
 		u.Avatar = ""
 	}
+
+	u.Joined = joined
 
 	// Response sukses
 	resp := UserDetailSuccessResp{

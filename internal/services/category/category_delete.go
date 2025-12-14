@@ -24,14 +24,14 @@ type CategoryDeleteFailResp struct {
 // DeleteCategory godoc
 // @Summary Delete a user
 // @Description Delete a user by ID
-// @Tags category
+// @Tags categories
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} services.CategoryDeleteSuccessResp
 // @Failure 400 {object} services.CategoryDeleteFailResp
 // @Failure 500 {object} services.CategoryDeleteFailResp
 // @Param id path int true "Category Id"
-// @Router /stocklab-api/v1/category/delete/{id} [delete]
+// @Router /stocklab-api/v1/categories/delete/{id} [delete]
 // @Security BearerAuth
 func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 	// Ambil ID dari URL

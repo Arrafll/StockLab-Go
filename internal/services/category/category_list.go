@@ -27,15 +27,15 @@ type CategoryFailResp struct {
 // GetCategoryList godoc
 // @Summary Get list of category
 // @Description Get all category in the system
-// @Tags category
+// @Tags categories
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} services.CategorySuccessResp
 // @Failure 500 {object} services.CategoryFailResp
-// @Router /stocklab-api/v1/category [get]
+// @Router /stocklab-api/v1/categories [get]
 // @Security BearerAuth
 func GetCategoryList(w http.ResponseWriter, r *http.Request) {
-	// Query semua user
+	// Query semua category
 	rows, err := db.DB.Query("SELECT id,name FROM categories ORDER BY id DESC")
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to fetch categories: "+err.Error())

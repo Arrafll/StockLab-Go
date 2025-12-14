@@ -30,14 +30,14 @@ type CategoryCreateFailResp struct {
 // CreateCategory godoc
 // @Summary Create category for products
 // @Description Create a category
-// @Tags category
+// @Tags categories
 // @Accept multipart/form-data
 // @Produce json
 // @Param name formData string true "name"
 // @Success 200 {object} services.CategoryCreateSuccessResp
 // @Failure 400 {object} services.CategoryCreateFailResp
 // @Failure 500 {object} services.CategoryCreateFailResp
-// @Router /stocklab-api/v1/category/create [post]
+// @Router /stocklab-api/v1/categories/create [post]
 // @Security BearerAuth
 func CreateCategory(w http.ResponseWriter, r *http.Request) {
 	// Parse multipart form (max 10MB)
