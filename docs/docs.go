@@ -327,6 +327,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/stocklab-api/v1/login": {
+            "post": {
+                "description": "Login to the system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "User login",
+                "parameters": [
+                    {
+                        "description": "User login credentials",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/services.AuthLoginParamRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.AuthLoginSuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/services.AuthLoginFailResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/stocklab-api/v1/products/create": {
             "post": {
                 "security": [
@@ -796,46 +836,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/v1/login": {
-            "post": {
-                "description": "Login to the system",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "User login",
-                "parameters": [
-                    {
-                        "description": "User login credentials",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/services.AuthLoginParamRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/services.AuthLoginSuccessResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/services.AuthLoginFailResponse"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -874,11 +874,11 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string",
-                    "example": "admin@gmail.com"
+                    "example": "andrerafli83@gmail.com"
                 },
                 "password": {
                     "type": "string",
-                    "example": "admin123"
+                    "example": "password123"
                 }
             }
         },

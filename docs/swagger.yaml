@@ -23,10 +23,10 @@ definitions:
   services.AuthLoginParamRequest:
     properties:
       email:
-        example: admin@gmail.com
+        example: andrerafli83@gmail.com
         type: string
       password:
-        example: admin123
+        example: password123
         type: string
     type: object
   services.AuthLoginSuccessResponse:
@@ -720,6 +720,32 @@ paths:
       summary: Update category product
       tags:
       - categories
+  /stocklab-api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Login to the system
+      parameters:
+      - description: User login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/services.AuthLoginParamRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.AuthLoginSuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/services.AuthLoginFailResponse'
+      summary: User login
+      tags:
+      - auth
   /stocklab-api/v1/products/create:
     post:
       consumes:
@@ -1022,32 +1048,6 @@ paths:
       summary: Update user with avatar
       tags:
       - users
-  /v1/login:
-    post:
-      consumes:
-      - application/json
-      description: Login to the system
-      parameters:
-      - description: User login credentials
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/services.AuthLoginParamRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/services.AuthLoginSuccessResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/services.AuthLoginFailResponse'
-      summary: User login
-      tags:
-      - auth
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" JWT
