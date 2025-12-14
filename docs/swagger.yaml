@@ -23,10 +23,10 @@ definitions:
   services.AuthLoginParamRequest:
     properties:
       email:
-        example: andrerafli83@gmail.com
+        example: admin@gmail.com
         type: string
       password:
-        example: password123
+        example: admin123
         type: string
     type: object
   services.AuthLoginSuccessResponse:
@@ -147,16 +147,186 @@ definitions:
         example: success
         type: string
     type: object
-  services.ProductResponse:
+  services.Product:
     properties:
-      price:
-        example: 29.99
-        type: number
-      product_id:
-        example: 101
+      avatar:
+        example: base64imagestring
+        type: string
+      brand:
+        example: Mie Sedap
+        type: string
+      category:
+        example: Mie
+        type: string
+      id:
+        example: 1
         type: integer
-      product_name:
-        example: Sample Product
+      name:
+        example: Mie Sedap Goreng
+        type: string
+      sku:
+        example: SKU-20251214201530-042
+        type: string
+    type: object
+  services.ProductCreateData:
+    properties:
+      brand:
+        example: Mie Sedap
+        type: string
+      category_id:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      image:
+        example: base64imagestring
+        type: string
+      name:
+        example: Mie Sedap Goreng
+        type: string
+      price:
+        example: "10000"
+        type: string
+      sku:
+        example: SKU-20251214201530-042
+        type: string
+    type: object
+  services.ProductCreateFailResp:
+    properties:
+      message:
+        example: Failed to create product
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.ProductDeleteFailResp:
+    properties:
+      message:
+        example: Failed to delete product
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.ProductDeleteSuccessResp:
+    properties:
+      message:
+        example: Product deleted successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.ProductDetail:
+    properties:
+      brand:
+        example: Mie Sedap
+        type: string
+      category:
+        example: Mie
+        type: string
+      id:
+        example: 1
+        type: integer
+      image:
+        example: base64imagestring
+        type: string
+      name:
+        example: Mie Sedap Goreng
+        type: string
+      price:
+        example: "10000"
+        type: string
+      sku:
+        example: SKU-20251214201530-042
+        type: string
+    type: object
+  services.ProductDetailFailResp:
+    properties:
+      message:
+        example: Failed to fetch product
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.ProductDetailSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.ProductDetail'
+      message:
+        example: Product fetched successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.ProductFailResp:
+    properties:
+      message:
+        example: Failed to fetch product
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.ProductSuccessResp:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/services.Product'
+        type: array
+      message:
+        example: Product fetched successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  services.ProductUpdateData:
+    properties:
+      brand:
+        example: Mie Sedap
+        type: string
+      category_id:
+        example: 1
+        type: integer
+      id:
+        example: 1
+        type: integer
+      image:
+        example: base64imagestring
+        type: string
+      name:
+        example: Mie Sedap Goreng
+        type: string
+      price:
+        example: "10000"
+        type: string
+      sku:
+        example: SKU-000001
+        type: string
+    type: object
+  services.ProductUpdateFailResp:
+    properties:
+      message:
+        example: Failed to update product
+        type: string
+      status:
+        example: error
+        type: string
+    type: object
+  services.ProductUpdateSuccessResp:
+    properties:
+      data:
+        $ref: '#/definitions/services.ProductUpdateData'
+      message:
+        example: Product updated successfully
+        type: string
+      status:
+        example: success
         type: string
     type: object
   services.User:
@@ -250,6 +420,9 @@ definitions:
       id:
         example: 1
         type: integer
+      joined:
+        example: "2025-12-14"
+        type: string
       name:
         example: Andre
         type: string
@@ -353,7 +526,79 @@ info:
   title: StockLab
   version: "1.0"
 paths:
-  /stocklab-api/v1/category:
+  /stocklab-api//v1/products/:
+    get:
+      consumes:
+      - application/json
+      description: Menampilkan list product
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.ProductSuccessResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.ProductFailResp'
+      security:
+      - BearerAuth: []
+      summary: Product list
+      tags:
+      - products
+  /stocklab-api//v1/products/update/{id}:
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Update product (PATCH semantics)
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: category_id
+        in: formData
+        name: category_id
+        type: integer
+      - description: brand
+        in: formData
+        name: brand
+        type: string
+      - description: price
+        in: formData
+        name: price
+        type: string
+      - description: Product image
+        in: formData
+        name: image
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.ProductUpdateSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.ProductUpdateFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.ProductUpdateFailResp'
+      security:
+      - BearerAuth: []
+      summary: Update product
+      tags:
+      - products
+  /stocklab-api/v1/categories:
     get:
       consumes:
       - application/json
@@ -373,8 +618,8 @@ paths:
       - BearerAuth: []
       summary: Get list of category
       tags:
-      - category
-  /stocklab-api/v1/category/create:
+      - categories
+  /stocklab-api/v1/categories/create:
     post:
       consumes:
       - multipart/form-data
@@ -404,8 +649,8 @@ paths:
       - BearerAuth: []
       summary: Create category for products
       tags:
-      - category
-  /stocklab-api/v1/category/delete/{id}:
+      - categories
+  /stocklab-api/v1/categories/delete/{id}:
     delete:
       consumes:
       - application/json
@@ -435,9 +680,9 @@ paths:
       - BearerAuth: []
       summary: Delete a user
       tags:
-      - category
-  /stocklab-api/v1/category/update/{id}:
-    put:
+      - categories
+  /stocklab-api/v1/categories/update/{id}:
+    patch:
       consumes:
       - multipart/form-data
       description: Update an existing category product data
@@ -474,7 +719,121 @@ paths:
       - BearerAuth: []
       summary: Update category product
       tags:
-      - category
+      - categories
+  /stocklab-api/v1/products/create:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a product
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: category_id
+        in: formData
+        name: category_id
+        required: true
+        type: integer
+      - description: brand
+        in: formData
+        name: brand
+        required: true
+        type: string
+      - description: Product image
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.ProductCreateData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.ProductCreateFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.ProductCreateFailResp'
+      security:
+      - BearerAuth: []
+      summary: Create product for products
+      tags:
+      - products
+  /stocklab-api/v1/products/delete/{id}:
+    delete:
+      description: Delete product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.ProductDeleteSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.ProductDeleteFailResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/services.ProductDeleteFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.ProductDeleteFailResp'
+      security:
+      - BearerAuth: []
+      summary: Delete product
+      tags:
+      - products
+  /stocklab-api/v1/products/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Menampilkan detail product berdasarkan ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.ProductDetailSuccessResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/services.ProductDetailFailResp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/services.ProductDetailFailResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/services.ProductDetailFailResp'
+      security:
+      - BearerAuth: []
+      summary: Product detail
+      tags:
+      - products
   /stocklab-api/v1/users:
     get:
       consumes:
@@ -689,21 +1048,6 @@ paths:
       summary: User login
       tags:
       - auth
-  /v1/product/:
-    post:
-      consumes:
-      - application/json
-      description: Menampilkan list product
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/services.ProductResponse'
-      summary: Product list
-      tags:
-      - product
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" JWT

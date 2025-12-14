@@ -39,17 +39,21 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 			r.Delete("/delete/{id}", userService.DeleteUser)
 		})
 
-		r.Route("/product", func(r chi.Router) {
-			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
-			r.Post("/", productService.GetProducts)
-		})
-
-		r.Route("/category", func(r chi.Router) {
+		r.Route("/categories", func(r chi.Router) {
 			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
 			r.Get("/", categoryService.GetCategoryList)
 			r.Post("/create", categoryService.CreateCategory)
 			r.Put("/update/{id}", categoryService.UpdateCategory)
 			r.Delete("/delete/{id}", categoryService.DeleteCategory)
+		})
+
+		r.Route("/products", func(r chi.Router) {
+			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
+			r.Get("/", productService.GetProductList)
+			r.Post("/create", productService.CreateProduct)
+			r.Get("/detail/{id}", productService.GetProductDetail)
+			r.Delete("/delete/{id}", productService.DeleteProduct)
+			r.Patch("/update/{id}", productService.UpdateProduct)
 		})
 
 	})

@@ -21,7 +21,120 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/stocklab-api/v1/category": {
+        "/stocklab-api//v1/products/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Menampilkan list product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Product list",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductSuccessResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api//v1/products/update/{id}": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update product (PATCH semantics)",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Update product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "category_id",
+                        "name": "category_id",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "brand",
+                        "name": "brand",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "price",
+                        "name": "price",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Product image",
+                        "name": "image",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductUpdateSuccessResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductUpdateFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductUpdateFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/categories": {
             "get": {
                 "security": [
                     {
@@ -36,7 +149,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "category"
+                    "categories"
                 ],
                 "summary": "Get list of category",
                 "responses": {
@@ -55,7 +168,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/stocklab-api/v1/category/create": {
+        "/stocklab-api/v1/categories/create": {
             "post": {
                 "security": [
                     {
@@ -70,7 +183,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "category"
+                    "categories"
                 ],
                 "summary": "Create category for products",
                 "parameters": [
@@ -104,7 +217,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/stocklab-api/v1/category/delete/{id}": {
+        "/stocklab-api/v1/categories/delete/{id}": {
             "delete": {
                 "security": [
                     {
@@ -119,7 +232,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "category"
+                    "categories"
                 ],
                 "summary": "Delete a user",
                 "parameters": [
@@ -153,8 +266,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/stocklab-api/v1/category/update/{id}": {
-            "put": {
+        "/stocklab-api/v1/categories/update/{id}": {
+            "patch": {
                 "security": [
                     {
                         "BearerAuth": []
@@ -168,7 +281,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "category"
+                    "categories"
                 ],
                 "summary": "Update category product",
                 "parameters": [
@@ -209,6 +322,183 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/services.CategoryUpdateFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/products/create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a product",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Create product for products",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "category_id",
+                        "name": "category_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "brand",
+                        "name": "brand",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Product image",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductCreateData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductCreateFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductCreateFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/products/delete/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Delete product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Delete product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDeleteSuccessResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDeleteFailResp"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDeleteFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDeleteFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/products/detail/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Menampilkan detail product berdasarkan ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Product detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDetailSuccessResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDetailFailResp"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDetailFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.ProductDetailFailResp"
                         }
                     }
                 }
@@ -546,29 +836,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/v1/product/": {
-            "post": {
-                "description": "Menampilkan list product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "product"
-                ],
-                "summary": "Product list",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/services.ProductResponse"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -607,11 +874,11 @@ const docTemplate = `{
             "properties": {
                 "email": {
                     "type": "string",
-                    "example": "andrerafli83@gmail.com"
+                    "example": "admin@gmail.com"
                 },
                 "password": {
                     "type": "string",
-                    "example": "password123"
+                    "example": "admin123"
                 }
             }
         },
@@ -786,20 +1053,260 @@ const docTemplate = `{
                 }
             }
         },
-        "services.ProductResponse": {
+        "services.Product": {
             "type": "object",
             "properties": {
-                "price": {
-                    "type": "number",
-                    "example": 29.99
-                },
-                "product_id": {
-                    "type": "integer",
-                    "example": 101
-                },
-                "product_name": {
+                "avatar": {
                     "type": "string",
-                    "example": "Sample Product"
+                    "example": "base64imagestring"
+                },
+                "brand": {
+                    "type": "string",
+                    "example": "Mie Sedap"
+                },
+                "category": {
+                    "type": "string",
+                    "example": "Mie"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Mie Sedap Goreng"
+                },
+                "sku": {
+                    "type": "string",
+                    "example": "SKU-20251214201530-042"
+                }
+            }
+        },
+        "services.ProductCreateData": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string",
+                    "example": "Mie Sedap"
+                },
+                "category_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Mie Sedap Goreng"
+                },
+                "price": {
+                    "type": "string",
+                    "example": "10000"
+                },
+                "sku": {
+                    "type": "string",
+                    "example": "SKU-20251214201530-042"
+                }
+            }
+        },
+        "services.ProductCreateFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to create product"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.ProductDeleteFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to delete product"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.ProductDeleteSuccessResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Product deleted successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "services.ProductDetail": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string",
+                    "example": "Mie Sedap"
+                },
+                "category": {
+                    "type": "string",
+                    "example": "Mie"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Mie Sedap Goreng"
+                },
+                "price": {
+                    "type": "string",
+                    "example": "10000"
+                },
+                "sku": {
+                    "type": "string",
+                    "example": "SKU-20251214201530-042"
+                }
+            }
+        },
+        "services.ProductDetailFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to fetch product"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.ProductDetailSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/services.ProductDetail"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Product fetched successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "services.ProductFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to fetch product"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.ProductSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/services.Product"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Product fetched successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "services.ProductUpdateData": {
+            "type": "object",
+            "properties": {
+                "brand": {
+                    "type": "string",
+                    "example": "Mie Sedap"
+                },
+                "category_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "base64imagestring"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Mie Sedap Goreng"
+                },
+                "price": {
+                    "type": "string",
+                    "example": "10000"
+                },
+                "sku": {
+                    "type": "string",
+                    "example": "SKU-000001"
+                }
+            }
+        },
+        "services.ProductUpdateFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to update product"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.ProductUpdateSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/services.ProductUpdateData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Product updated successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
                 }
             }
         },
@@ -930,6 +1437,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "joined": {
+                    "type": "string",
+                    "example": "2025-12-14"
                 },
                 "name": {
                     "type": "string",
