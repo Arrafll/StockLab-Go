@@ -400,6 +400,13 @@
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "price",
+                        "name": "price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "file",
                         "description": "Product image",
                         "name": "image",
@@ -1048,10 +1055,6 @@
         "services.Product": {
             "type": "object",
             "properties": {
-                "avatar": {
-                    "type": "string",
-                    "example": "base64imagestring"
-                },
                 "brand": {
                     "type": "string",
                     "example": "Mie Sedap"
@@ -1063,6 +1066,10 @@
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "base64imagestring"
                 },
                 "name": {
                     "type": "string",

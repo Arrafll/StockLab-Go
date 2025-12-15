@@ -408,6 +408,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "price",
+                        "name": "price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "file",
                         "description": "Product image",
                         "name": "image",
@@ -1056,10 +1063,6 @@ const docTemplate = `{
         "services.Product": {
             "type": "object",
             "properties": {
-                "avatar": {
-                    "type": "string",
-                    "example": "base64imagestring"
-                },
                 "brand": {
                     "type": "string",
                     "example": "Mie Sedap"
@@ -1071,6 +1074,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "base64imagestring"
                 },
                 "name": {
                     "type": "string",
