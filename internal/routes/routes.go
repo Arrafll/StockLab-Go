@@ -17,13 +17,14 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 
 	r := chi.NewRouter()
 
+	swaggerUrl := cfg.SwaggerURL
 	// Swagger Documentation Route
 	r.Mount("/stocklab-api/documentation", httpSwagger.Handler(
 		httpSwagger.URL("/stocklab-api/documentation/doc.json"),
 	))
-	
+
 	// API Version 1
-	r.Route("/v1", func(r chi.Router) {
+	r.Route(swaggerUrl+"v1", func(r chi.Router) {
 		// Login Routes
 		r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 			authService.Login(w, r, cfg)
