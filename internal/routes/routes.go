@@ -17,18 +17,11 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 
 	r := chi.NewRouter()
 
-	r.Route("/stocklab-api/documentation", func(r chi.Router) {
-		// 1. Redirect base /documentation to /documentation/ so UI loads correctly
-		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			http.Redirect(w, r, r.URL.Path+"/", http.StatusMovedPermanently)
-		})
-
-		// 2. Serve the UI assets and the doc.json
-		r.Get("/*", httpSwagger.Handler(
-			httpSwagger.URL("/stocklab-api/documentation/doc.json"),
-		))
-	})
-
+	// Swagger Documentation Route
+	r.Mount("/stocklab-api/documentation", httpSwagger.Handler(
+		httpSwagger.URL("/stocklab-api/documentation/doc.json"),
+	))
+	
 	// API Version 1
 	r.Route("/v1", func(r chi.Router) {
 		// Login Routes
