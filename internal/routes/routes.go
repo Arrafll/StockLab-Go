@@ -18,8 +18,8 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 	r := chi.NewRouter()
 
 	// Swagger UI route
-	r.Get("/stocklab-api/documentation*", httpSwagger.Handler(
-		httpSwagger.URL(cfg.SwaggerURL+"documentation/doc.json"),
+	r.Get("/stocklab-api/documentation/*", httpSwagger.Handler(
+		httpSwagger.URL("/stocklab-api/documentation/doc.json"), // URL relatif ke endpoint JSON
 	))
 
 	// API Version 1
