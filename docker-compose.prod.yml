@@ -12,6 +12,8 @@ services:
       - migrate
     volumes:
       - ./logs:/app/logs
+    networks:
+      - appnet
 
   db:
     image: postgres:16
@@ -21,6 +23,8 @@ services:
       - .env.production
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - appnet
 
   migrate:
     image: migrate/migrate
@@ -36,6 +40,12 @@ services:
       "up"
     ]
     restart: "on-failure"
+    networks:
+      - appnet
 
 volumes:
   postgres_data:
+
+  networks:
+    appnet:
+      driver: bridge
