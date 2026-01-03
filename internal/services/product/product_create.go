@@ -94,6 +94,15 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// insert stock product
+	stockQuery := `INSERT INTO stocks (product_id, quantity) VALUES ($1, $2)`
+	_, err = db.DB.Exec(stockQuery, productId, 0)
+
+	if err != nil {
+		utils.RespondError(w, http.StatusInternalServerError, "Failed to create stock: "+err.Error())
+		return
+	}
+
 	// Response sukses
 	response := ProductCreateData{
 		ID:         productId,

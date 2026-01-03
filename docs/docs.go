@@ -1188,6 +1188,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "10000"
                 },
+                "quantity": {
+                    "type": "integer",
+                    "example": 150
+                },
                 "sku": {
                     "type": "string",
                     "example": "SKU-20251214201530-042"

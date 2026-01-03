@@ -8,6 +8,7 @@ import (
 	authService "github.com/Arrafll/StockLab-Go/internal/services/auth"
 	categoryService "github.com/Arrafll/StockLab-Go/internal/services/category"
 	productService "github.com/Arrafll/StockLab-Go/internal/services/product"
+	transactionService "github.com/Arrafll/StockLab-Go/internal/services/transaction"
 	userService "github.com/Arrafll/StockLab-Go/internal/services/user"
 	"github.com/go-chi/chi/v5"
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -19,12 +20,12 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 
 	swaggerUrl := cfg.SwaggerURL
 	// Swagger Documentation Route
-	r.Mount("/stocklab-api/documentation", httpSwagger.Handler(
+	r.Mount(swaggerUrl+"documentation", httpSwagger.Handler(
 		httpSwagger.URL("/stocklab-api/documentation/doc.json"),
 	))
 
 	// API Version 1
-	r.Route(swaggerUrl+"v1", func(r chi.Router) {
+	r.Route("/v1", func(r chi.Router) {
 		// Login Routes
 		r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 			authService.Login(w, r, cfg)
@@ -54,6 +55,12 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 			r.Get("/detail/{id}", productService.GetProductDetail)
 			r.Delete("/delete/{id}", productService.DeleteProduct)
 			r.Patch("/update/{id}", productService.UpdateProduct)
+		})
+
+		r.Route("/transactions", func(r chi.Router) {
+			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
+			r.Post("/create", transactionService.CreateTransaction)
+			r.Get("/", transactionService.GetTransactionList)
 		})
 
 	})
