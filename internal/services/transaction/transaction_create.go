@@ -10,21 +10,6 @@ import (
 	"github.com/Arrafll/StockLab-Go/internal/utils"
 )
 
-// CreateTransaction godoc
-// @Summary Create transaction stocks
-// @Description Create a transaction for stock movements
-// @Tags transactions
-// @Accept multipart/form-data
-// @Produce json
-// @Param product_id formData int true "product_id"
-// @Param user_id formData int true "user_id"
-// @Param quantity formData int true "quantity"
-// @Param move_type formData string true "move_type"
-// @Success 200 {object} services.TransactionCreateData
-// @Failure 400 {object} services.TransactionCreateFailResp
-// @Failure 500 {object} services.TransactionCreateFailResp
-// @Router /stocklab-api/v1/transactions/create [post]
-// @Security BearerAuth
 type TransactionCreateData struct {
 	ID        int64  `json:"id" example:"1"`
 	ProductID int64  `json:"product_id" example:"1"`
@@ -43,6 +28,21 @@ type TransactionCreateFailResp struct {
 	Message string `json:"message" example:"Failed to create transaction"`
 }
 
+// CreateTransaction godoc
+// @Summary Create transaction stocks
+// @Description Create a transaction for stock movements
+// @Tags transactions
+// @Accept multipart/form-data
+// @Produce json
+// @Param product_id formData int true "product_id"
+// @Param user_id formData int true "user_id"
+// @Param quantity formData int true "quantity"
+// @Param move_type formData string true "move_type"
+// @Success 200 {object} services.TransactionCreateData
+// @Failure 400 {object} services.TransactionCreateFailResp
+// @Failure 500 {object} services.TransactionCreateFailResp
+// @Router /stocklab-api/v1/transactions/create [post]
+// @Security BearerAuth
 func CreateTransaction(w http.ResponseWriter, r *http.Request) {
 	if err := r.ParseMultipartForm(10 << 20); err != nil {
 		utils.RespondError(w, http.StatusBadRequest, "Invalid data: "+err.Error())

@@ -8,19 +8,6 @@ import (
 	"github.com/Arrafll/StockLab-Go/internal/utils"
 )
 
-// ListTransaction godoc
-// @Summary List transaction stocks
-// @Description List a transaction for stock movements
-// @Tags transactions
-// @Accept multipart/form-data
-// @Produce json
-// @Param start_date query string false "Start date (YYYY-MM-DD)"
-// @Param end_date query string false "End date (YYYY-MM-DD)"
-// @Success 200 {object} services.TransactionListData
-// @Failure 400 {object} services.TransactionListFailResp
-// @Failure 500 {object} services.TransactionListFailResp
-// @Router /stocklab-api/v1/transactions/list [post]
-// @Security BearerAuth
 type TransactionListData struct {
 	ID           int64     `json:"id" example:"1"`
 	ProductName  string    `json:"product_name" example:"Mie Sedap Goreng"`
@@ -42,6 +29,19 @@ type TransactionListFailResp struct {
 	Message string `json:"message" example:"Failed to fetch transaction"`
 }
 
+// ListTransaction godoc
+// @Summary List transaction stocks
+// @Description List a transaction for stock movements
+// @Tags transactions
+// @Accept multipart/form-data
+// @Produce json
+// @Param start_date query string false "Start date (YYYY-MM-DD)"
+// @Param end_date query string false "End date (YYYY-MM-DD)"
+// @Success 200 {object} services.TransactionListData
+// @Failure 400 {object} services.TransactionListFailResp
+// @Failure 500 {object} services.TransactionListFailResp
+// @Router /stocklab-api/v1/transactions/list [post]
+// @Security BearerAuth
 func GetTransactionList(w http.ResponseWriter, r *http.Request) {
 	startDate := r.URL.Query().Get("start_date")
 	endDate := r.URL.Query().Get("end_date")
