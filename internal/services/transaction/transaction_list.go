@@ -22,12 +22,15 @@ import (
 // @Router /stocklab-api/v1/transactions/list [post]
 // @Security BearerAuth
 type TransactionListData struct {
-	ID          int64     `json:"id" example:"1"`
-	ProductName string    `json:"product_name" example:"Mie Sedap Goreng"`
-	UserID      int64     `json:"user_id" example:"1"`
-	Quantity    int64     `json:"quantity" example:"10"`
-	MoveType    string    `json:"move_type" example:"in"`
-	CreatedAt   time.Time `json:"created_at" example:"2024-12-14T20:15:30Z"` // ISO 8601 format
+	ID           int64     `json:"id" example:"1"`
+	ProductName  string    `json:"product_name" example:"Mie Sedap Goreng"`
+	ProductSKU   string    `json:"product_sku" example:"MIE001"`
+	ProductBrand string    `json:"product_brand" example:"Sedap"`
+	ProductPrice int64     `json:"product_price" example:"5000"`
+	PICName      string    `json:"pic_name" example:"John Doe"`
+	Quantity     int64     `json:"quantity" example:"10"`
+	MoveType     string    `json:"move_type" example:"in"`
+	CreatedAt    time.Time `json:"created_at" example:"2024-12-14T20:15:30Z"` // ISO 8601 format
 }
 type TransactionListSuccessResp struct {
 	Status  string `json:"status" example:"success"`
@@ -44,9 +47,10 @@ func GetTransactionList(w http.ResponseWriter, r *http.Request) {
 	endDate := r.URL.Query().Get("end_date")
 
 	query := `
-		SELECT tr.id, p.name as product_name, tr.user_id, tr.quantity, tr.move_type, tr.created_at
+		SELECT tr.id, p.name as product_name, p.sku, p.brand, p.price, u.name as pic_name, tr.quantity, tr.move_type, tr.created_at
 		FROM transactions tr
 		LEFT JOIN products p ON tr.product_id = p.id
+		LEFT JOIN users u ON tr.user_id = u.id
 	`
 
 	var args []interface{}
@@ -80,7 +84,10 @@ func GetTransactionList(w http.ResponseWriter, r *http.Request) {
 		if err := rows.Scan(
 			&t.ID,
 			&t.ProductName,
-			&t.UserID,
+			&t.ProductSKU,
+			&t.ProductBrand,
+			&t.ProductPrice,
+			&t.PICName,
 			&t.Quantity,
 			&t.MoveType,
 			&t.CreatedAt,
