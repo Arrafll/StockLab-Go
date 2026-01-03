@@ -22,12 +22,12 @@ import (
 // @Router /stocklab-api/v1/transactions/list [post]
 // @Security BearerAuth
 type TransactionListData struct {
-	ID        int64     `json:"id" example:"1"`
-	ProductID int64     `json:"product_id" example:"1"`
-	UserID    int64     `json:"user_id" example:"1"`
-	Quantity  int64     `json:"quantity" example:"10"`
-	MoveType  string    `json:"move_type" example:"in"`
-	CreatedAt time.Time `json:"created_at" example:"2024-12-14T20:15:30Z"` // ISO 8601 format
+	ID          int64     `json:"id" example:"1"`
+	ProductName string    `json:"product_name" example:"Mie Sedap Goreng"`
+	UserID      int64     `json:"user_id" example:"1"`
+	Quantity    int64     `json:"quantity" example:"10"`
+	MoveType    string    `json:"move_type" example:"in"`
+	CreatedAt   time.Time `json:"created_at" example:"2024-12-14T20:15:30Z"` // ISO 8601 format
 }
 type TransactionListSuccessResp struct {
 	Status  string `json:"status" example:"success"`
@@ -44,8 +44,9 @@ func GetTransactionList(w http.ResponseWriter, r *http.Request) {
 	endDate := r.URL.Query().Get("end_date")
 
 	query := `
-		SELECT id, product_id, user_id, quantity, move_type, created_at
-		FROM transactions
+		SELECT tr.id, p.name as product_name, tr.user_id, tr.quantity, tr.move_type, tr.created_at
+		FROM transactions tr
+		LEFT JOIN products p ON tr.product_id = p.id
 	`
 
 	var args []interface{}
@@ -53,17 +54,17 @@ func GetTransactionList(w http.ResponseWriter, r *http.Request) {
 
 	// Build WHERE condition
 	if startDate != "" && endDate != "" {
-		where = "WHERE created_at::date BETWEEN $1 AND $2"
+		where = "WHERE tr.created_at::date BETWEEN $1 AND $2"
 		args = append(args, startDate, endDate)
 	} else if startDate != "" {
-		where = "WHERE created_at::date >= $1"
+		where = "WHERE tr.created_at::date >= $1"
 		args = append(args, startDate)
 	} else if endDate != "" {
-		where = "WHERE created_at::date <= $1"
+		where = "WHERE tr.created_at::date <= $1"
 		args = append(args, endDate)
 	}
 
-	order := " ORDER BY created_at DESC"
+	order := " ORDER BY tr.created_at DESC"
 
 	rows, err := db.DB.Query(query+where+order, args...)
 	if err != nil {
@@ -78,7 +79,7 @@ func GetTransactionList(w http.ResponseWriter, r *http.Request) {
 		var t TransactionListData
 		if err := rows.Scan(
 			&t.ID,
-			&t.ProductID,
+			&t.ProductName,
 			&t.UserID,
 			&t.Quantity,
 			&t.MoveType,
