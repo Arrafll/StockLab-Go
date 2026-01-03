@@ -24,8 +24,9 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 		httpSwagger.URL("/stocklab-api/documentation/doc.json"),
 	))
 
+	url := swaggerUrl
 	// API Version 1
-	r.Route("/v1", func(r chi.Router) {
+	r.Route(url+"v1", func(r chi.Router) {
 		// Login Routes
 		r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
 			authService.Login(w, r, cfg)
