@@ -149,9 +149,6 @@ definitions:
     type: object
   services.Product:
     properties:
-      avatar:
-        example: base64imagestring
-        type: string
       brand:
         example: Mie Sedap
         type: string
@@ -161,6 +158,9 @@ definitions:
       id:
         example: 1
         type: integer
+      image:
+        example: base64imagestring
+        type: string
       name:
         example: Mie Sedap Goreng
         type: string
@@ -765,6 +765,11 @@ paths:
       - description: brand
         in: formData
         name: brand
+        required: true
+        type: string
+      - description: price
+        in: formData
+        name: price
         required: true
         type: string
       - description: Product image
