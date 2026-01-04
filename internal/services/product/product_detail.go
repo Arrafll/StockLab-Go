@@ -18,6 +18,7 @@ type ProductDetail struct {
 	SKU      string `json:"sku" example:"SKU-20251214201530-042"`
 	Brand    string `json:"brand" example:"Mie Sedap"`
 	Price    string `json:"price" example:"10000"`
+	Quantity int32  `json:"quantity" example:"150"`
 	Image    string `json:"image" example:"base64imagestring"`
 }
 
@@ -62,9 +63,11 @@ func GetProductDetail(w http.ResponseWriter, r *http.Request) {
 			p.brand,
 			COALESCE(p.price, ''),
 			COALESCE(c.name, 'N/A') AS category,
+			s.quantity,
 			p.image
 		FROM products p
 		LEFT JOIN categories c ON c.id = p.category_id
+		LEFT JOIN stocks s ON s.product_id = p.id
 		WHERE p.id = $1
 	`
 
@@ -80,6 +83,7 @@ func GetProductDetail(w http.ResponseWriter, r *http.Request) {
 		&product.Brand,
 		&product.Price,
 		&product.Category,
+		&product.Quantity,
 		&imageBytes,
 	)
 

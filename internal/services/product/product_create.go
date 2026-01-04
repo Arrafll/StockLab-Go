@@ -44,6 +44,7 @@ type ProductCreateFailResp struct {
 // @Param name formData string true "name"
 // @Param category_id formData int true "category_id"
 // @Param brand formData string true "brand"
+// @Param price formData string true "price"
 // @Param image formData file true "Product image"
 // @Success 200 {object} services.ProductCreateData
 // @Failure 400 {object} services.ProductCreateFailResp
@@ -68,7 +69,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Ambil file avatar
+	// Ambil file image
 	file, _, err := r.FormFile("image")
 	if err != nil {
 		utils.RespondError(w, http.StatusBadRequest, "Failed to read image: "+err.Error())
@@ -90,6 +91,15 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	err = db.DB.QueryRow(query, name, categoryId, sku, brand, price, imageBytes).Scan(&productId)
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to create product: "+err.Error())
+		return
+	}
+
+	// insert stock product
+	stockQuery := `INSERT INTO stocks (product_id, quantity) VALUES ($1, $2)`
+	_, err = db.DB.Exec(stockQuery, productId, 0)
+
+	if err != nil {
+		utils.RespondError(w, http.StatusInternalServerError, "Failed to create stock: "+err.Error())
 		return
 	}
 

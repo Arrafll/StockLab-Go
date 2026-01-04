@@ -15,7 +15,7 @@ type Product struct {
 	Category string `json:"category" example:"Mie"`
 	SKU      string `json:"sku" example:"SKU-20251214201530-042"`
 	Brand    string `json:"brand" example:"Mie Sedap"`
-	Image    string `json:"avatar" form:"avatar" example:"base64imagestring"`
+	Image    string `json:"image" form:"image" example:"base64imagestring"`
 }
 
 type ProductSuccessResp struct {

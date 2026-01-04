@@ -408,6 +408,13 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "type": "string",
+                        "description": "price",
+                        "name": "price",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
                         "type": "file",
                         "description": "Product image",
                         "name": "image",
@@ -539,6 +546,130 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/services.ProductDetailFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/transactions/create": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a transaction for stock movements",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Create transaction stocks",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "product_id",
+                        "name": "product_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "user_id",
+                        "name": "user_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "quantity",
+                        "name": "quantity",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "move_type",
+                        "name": "move_type",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.TransactionCreateData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.TransactionCreateFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.TransactionCreateFailResp"
+                        }
+                    }
+                }
+            }
+        },
+        "/stocklab-api/v1/transactions/list": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "List a transaction for stock movements",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "List transaction stocks",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Start date (YYYY-MM-DD)",
+                        "name": "start_date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date (YYYY-MM-DD)",
+                        "name": "end_date",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.TransactionListData"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/services.TransactionListFailResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.TransactionListFailResp"
                         }
                     }
                 }
@@ -1056,10 +1187,6 @@ const docTemplate = `{
         "services.Product": {
             "type": "object",
             "properties": {
-                "avatar": {
-                    "type": "string",
-                    "example": "base64imagestring"
-                },
                 "brand": {
                     "type": "string",
                     "example": "Mie Sedap"
@@ -1071,6 +1198,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "image": {
+                    "type": "string",
+                    "example": "base64imagestring"
                 },
                 "name": {
                     "type": "string",
@@ -1180,6 +1311,10 @@ const docTemplate = `{
                 "price": {
                     "type": "string",
                     "example": "10000"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 150
                 },
                 "sku": {
                     "type": "string",
@@ -1307,6 +1442,100 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "success"
+                }
+            }
+        },
+        "services.TransactionCreateData": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "move_type": {
+                    "description": "IN | OUT",
+                    "type": "string",
+                    "example": "in"
+                },
+                "product_id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "user_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "services.TransactionCreateFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to create transaction"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.TransactionListData": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "ISO 8601 format",
+                    "type": "string",
+                    "example": "2024-12-14T20:15:30Z"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "move_type": {
+                    "type": "string",
+                    "example": "in"
+                },
+                "pic_name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "product_brand": {
+                    "type": "string",
+                    "example": "Sedap"
+                },
+                "product_name": {
+                    "type": "string",
+                    "example": "Mie Sedap Goreng"
+                },
+                "product_price": {
+                    "type": "integer",
+                    "example": 5000
+                },
+                "product_sku": {
+                    "type": "string",
+                    "example": "MIE001"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 10
+                }
+            }
+        },
+        "services.TransactionListFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to fetch transaction"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
                 }
             }
         },
