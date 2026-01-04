@@ -7,6 +7,7 @@ import (
 	"github.com/Arrafll/StockLab-Go/internal/config"
 	authService "github.com/Arrafll/StockLab-Go/internal/services/auth"
 	categoryService "github.com/Arrafll/StockLab-Go/internal/services/category"
+	dashboardService "github.com/Arrafll/StockLab-Go/internal/services/dashboard"
 	productService "github.com/Arrafll/StockLab-Go/internal/services/product"
 	transactionService "github.com/Arrafll/StockLab-Go/internal/services/transaction"
 	userService "github.com/Arrafll/StockLab-Go/internal/services/user"
@@ -62,6 +63,11 @@ func RegisterRoutes(cfg *config.Config) http.Handler {
 			r.Use(authService.JWTMiddleware(cfg)) // middleware JWT
 			r.Post("/create", transactionService.CreateTransaction)
 			r.Get("/", transactionService.GetTransactionList)
+		})
+
+		r.Route("/dashboard", func(r chi.Router) {
+			r.Use(authService.JWTMiddleware(cfg))
+			r.Get("/", dashboardService.DashboardMain)
 		})
 
 	})

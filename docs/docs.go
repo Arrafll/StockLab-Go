@@ -327,6 +327,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/stocklab-api/v1/dashboard/": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Menampilkan data dashboard",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "dashboard"
+                ],
+                "summary": "Dashboard data",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/services.DashboardSuccessResp"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/services.DashboardFailResp"
+                        }
+                    }
+                }
+            }
+        },
         "/stocklab-api/v1/login": {
             "post": {
                 "description": "Login to the system",
@@ -1177,6 +1211,63 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "User updated successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "services.DashboardData": {
+            "type": "object",
+            "properties": {
+                "chart_activity_data": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                    }
+                },
+                "low_stock": {
+                    "type": "integer",
+                    "example": 50
+                },
+                "no_stock": {
+                    "type": "integer",
+                    "example": 10
+                },
+                "product_total": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "stock_total": {
+                    "type": "integer",
+                    "example": 5000
+                }
+            }
+        },
+        "services.DashboardFailResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Failed to fetch dashboard data"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "error"
+                }
+            }
+        },
+        "services.DashboardSuccessResp": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/services.DashboardData"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Dashboard data fetched successfully"
                 },
                 "status": {
                     "type": "string",
