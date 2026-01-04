@@ -41,7 +41,7 @@ type ProductFailResp struct {
 // @Router /stocklab-api//v1/products/ [get]
 func GetProductList(w http.ResponseWriter, r *http.Request) {
 	// Query semua category
-	rows, err := db.DB.Query("SELECT p.id, p.name, p.sku, p.brand, COALESCE( c.name, 'N/A') as category, p.image FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY id DESC")
+	rows, err := db.DB.Query("SELECT p.id, p.name, p.category_id as category, p.sku, p.brand, p.image FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY id DESC")
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to fetch products: "+err.Error())
 		return

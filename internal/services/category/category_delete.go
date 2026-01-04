@@ -49,7 +49,7 @@ func DeleteCategory(w http.ResponseWriter, r *http.Request) {
 
 	// Cek apakah user ada
 	var exists bool
-	err = db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE id=$1)", id).Scan(&exists)
+	err = db.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM categories WHERE id=$1)", id).Scan(&exists)
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Database error: "+err.Error())
 		return
