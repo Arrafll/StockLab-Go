@@ -19,7 +19,7 @@ type ProductUpdateData struct {
 	CategoryId *int   `json:"category_id,omitempty" example:"1"`
 	SKU        string `json:"sku" example:"SKU-000001"`
 	Brand      string `json:"brand" example:"Mie Sedap"`
-	Price      string `json:"price" example:"10000"`
+	Price      int `json:"price" example:"10000"`
 	Image      string `json:"image,omitempty" example:"base64imagestring"`
 }
 
