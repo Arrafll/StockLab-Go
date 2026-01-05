@@ -47,7 +47,7 @@ func GetTransactionList(w http.ResponseWriter, r *http.Request) {
 	endDate := r.URL.Query().Get("end_date")
 
 	query := `
-		SELECT tr.id, p.name as product_name, p.sku, p.brand, COALESCE(p.price, 0) as price, u.name as pic_name, tr.quantity, tr.move_type, tr.created_at
+		SELECT tr.id, p.name as product_name, p.sku, p.brand, COALESCE(CAST(p.price AS INT), 0) as price, u.name as pic_name, tr.quantity, tr.move_type, tr.created_at
 		FROM transactions tr
 		LEFT JOIN products p ON tr.product_id = p.id
 		LEFT JOIN users u ON tr.user_id = u.id
