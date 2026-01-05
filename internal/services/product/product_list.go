@@ -43,7 +43,7 @@ type ProductFailResp struct {
 // @Router /stocklab-api//v1/products/ [get]
 func GetProductList(w http.ResponseWriter, r *http.Request) {
 	// Query semua category
-	rows, err := db.DB.Query(`SELECT p.id, p.name, p.category_id as category, p.sku, p.brand, COALESCE(p.price, 0) as price, COALESCE(s.quantity, 0) as quantity, p.image 
+	rows, err := db.DB.Query(`SELECT p.id, p.name, p.category_id as category, p.sku, p.brand, COALESCE(CAST(p.price AS INT), 0) as price, COALESCE(s.quantity, 0) as quantity, p.image 
 							  FROM products p 
 							  LEFT JOIN stocks s ON s.product_id = p.id 
 							  LEFT JOIN categories c ON c.id = p.category_id 
