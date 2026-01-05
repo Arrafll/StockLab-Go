@@ -204,6 +204,12 @@ definitions:
       name:
         example: Mie Sedap Goreng
         type: string
+      price:
+        example: 100000
+        type: integer
+      quantity:
+        example: 150
+        type: integer
       sku:
         example: SKU-20251214201530-042
         type: string
@@ -346,8 +352,8 @@ definitions:
         example: Mie Sedap Goreng
         type: string
       price:
-        example: "10000"
-        type: string
+        example: 10000
+        type: integer
       sku:
         example: SKU-000001
         type: string

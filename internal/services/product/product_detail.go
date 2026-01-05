@@ -61,9 +61,9 @@ func GetProductDetail(w http.ResponseWriter, r *http.Request) {
 			p.name,
 			p.sku,
 			p.brand,
-			COALESCE(p.price, ''),
+			COALESCE(p.price, '0') as price,
 			COALESCE(c.name, 'N/A') AS category,
-			s.quantity,
+			COALESCE(s.quantity, 0) as quantity,
 			p.image
 		FROM products p
 		LEFT JOIN categories c ON c.id = p.category_id

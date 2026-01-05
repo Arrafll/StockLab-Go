@@ -1298,6 +1298,14 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Mie Sedap Goreng"
                 },
+                "price": {
+                    "type": "integer",
+                    "example": 100000
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 150
+                },
                 "sku": {
                     "type": "string",
                     "example": "SKU-20251214201530-042"
@@ -1498,8 +1506,8 @@ const docTemplate = `{
                     "example": "Mie Sedap Goreng"
                 },
                 "price": {
-                    "type": "string",
-                    "example": "10000"
+                    "type": "integer",
+                    "example": 10000
                 },
                 "sku": {
                     "type": "string",

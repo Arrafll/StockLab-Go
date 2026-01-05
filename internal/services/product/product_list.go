@@ -15,7 +15,8 @@ type Product struct {
 	Category string `json:"category" example:"Mie"`
 	SKU      string `json:"sku" example:"SKU-20251214201530-042"`
 	Brand    string `json:"brand" example:"Mie Sedap"`
-	Price    int `json:"price" example:"100000"`
+	Price    int    `json:"price" example:"100000"`
+	Quantity int32  `json:"quantity" example:"150"`
 	Image    string `json:"image" form:"image" example:"base64imagestring"`
 }
 
@@ -42,7 +43,11 @@ type ProductFailResp struct {
 // @Router /stocklab-api//v1/products/ [get]
 func GetProductList(w http.ResponseWriter, r *http.Request) {
 	// Query semua category
-	rows, err := db.DB.Query("SELECT p.id, p.name, p.category_id as category, p.sku, p.brand, p.price, p.image FROM products p LEFT JOIN categories c ON c.id = p.category_id ORDER BY id DESC")
+	rows, err := db.DB.Query(`SELECT p.id, p.name, p.category_id as category, p.sku, p.brand, COALESCE(p.price, 0) as price, COALESCE(s.quantity, 0) as quantity, p.image 
+							  FROM products p 
+							  LEFT JOIN stocks s ON s.product_id = p.id 
+							  LEFT JOIN categories c ON c.id = p.category_id 
+							  ORDER BY id DESC`)
 	if err != nil {
 		utils.RespondError(w, http.StatusInternalServerError, "Failed to fetch products: "+err.Error())
 		return
@@ -54,7 +59,7 @@ func GetProductList(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var image []byte
 		var p Product
-		if err := rows.Scan(&p.ID, &p.Name, &p.Category, &p.SKU, &p.Brand, &p.Price, &image); err != nil {
+		if err := rows.Scan(&p.ID, &p.Name, &p.Category, &p.SKU, &p.Brand, &p.Price, &p.Quantity, &image); err != nil {
 			utils.RespondError(w, http.StatusInternalServerError, "Failed to scan products: "+err.Error())
 			return
 		}
