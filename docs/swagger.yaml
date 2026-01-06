@@ -147,46 +147,6 @@ definitions:
         example: success
         type: string
     type: object
-  services.DashboardData:
-    properties:
-      chart_activity_data:
-        items:
-          additionalProperties: true
-          type: object
-        type: array
-      low_stock:
-        example: 50
-        type: integer
-      no_stock:
-        example: 10
-        type: integer
-      product_total:
-        example: 100
-        type: integer
-      stock_total:
-        example: 5000
-        type: integer
-    type: object
-  services.DashboardFailResp:
-    properties:
-      message:
-        example: Failed to fetch dashboard data
-        type: string
-      status:
-        example: error
-        type: string
-    type: object
-  services.DashboardSuccessResp:
-    properties:
-      data:
-        $ref: '#/definitions/services.DashboardData'
-      message:
-        example: Dashboard data fetched successfully
-        type: string
-      status:
-        example: success
-        type: string
-    type: object
   services.Product:
     properties:
       brand:
@@ -837,27 +797,6 @@ paths:
       summary: Update category product
       tags:
       - categories
-  /stocklab-api/v1/dashboard/:
-    get:
-      consumes:
-      - application/json
-      description: Menampilkan data dashboard
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/services.DashboardSuccessResp'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/services.DashboardFailResp'
-      security:
-      - BearerAuth: []
-      summary: Dashboard data
-      tags:
-      - dashboard
   /stocklab-api/v1/login:
     post:
       consumes:
